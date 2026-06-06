@@ -1,0 +1,131 @@
+DatabaseName,TableName,ColumnName,DataType,ColumnType,IsNullable,ColumnKey,ColumnDefault,ExtraInfo
+edtech_platform,banners,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,banners,title,varchar,varchar(255),YES,,NULL,
+edtech_platform,banners,image_url,varchar,varchar(500),NO,,NULL,
+edtech_platform,banners,is_active,tinyint,tinyint(1),YES,,1,
+edtech_platform,banners,display_order,int,int,YES,,0,
+edtech_platform,banners,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,book_orders,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,book_orders,student_id,char,char(36),NO,MUL,NULL,
+edtech_platform,book_orders,payment_order_id,char,char(36),NO,MUL,NULL,
+edtech_platform,book_orders,tracking_id,varchar,varchar(255),YES,,NULL,
+edtech_platform,book_orders,shipping_status,enum,"enum('PENDING','SHIPPED','DELIVERED','CANCELLED')",YES,,PENDING,
+edtech_platform,book_orders,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,book_orders,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,books,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,books,title,varchar,varchar(255),NO,,NULL,
+edtech_platform,books,price,decimal,"decimal(10,2)",NO,,NULL,
+edtech_platform,books,stock_quantity,int,int,YES,,0,
+edtech_platform,books,is_digital,tinyint,tinyint(1),YES,,0,
+edtech_platform,books,pdf_url,varchar,varchar(500),YES,,NULL,
+edtech_platform,books,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,books,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,exam_registrations,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,exam_registrations,student_id,char,char(36),NO,MUL,NULL,
+edtech_platform,exam_registrations,exam_id,char,char(36),NO,MUL,NULL,
+edtech_platform,exam_registrations,payment_order_id,char,char(36),NO,MUL,NULL,
+edtech_platform,exam_registrations,admit_card_url,varchar,varchar(500),YES,,NULL,
+edtech_platform,exam_registrations,result_score,decimal,"decimal(5,2)",YES,,NULL,
+edtech_platform,exam_registrations,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,exam_registrations,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,exam_sessions,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,exam_sessions,registration_id,char,char(36),NO,UNI,NULL,
+edtech_platform,exam_sessions,session_token,varchar,varchar(255),NO,UNI,NULL,
+edtech_platform,exam_sessions,status,enum,"enum('ACTIVE','SUBMITTED','EXPIRED')",YES,,ACTIVE,
+edtech_platform,exam_sessions,time_remaining,int,int,NO,,NULL,
+edtech_platform,exam_sessions,ip_address,varchar,varchar(45),YES,,NULL,
+edtech_platform,exam_sessions,user_agent,text,text,YES,,NULL,
+edtech_platform,exam_sessions,is_flagged,tinyint,tinyint(1),YES,,0,
+edtech_platform,exam_sessions,started_at,timestamp,timestamp,YES,,NULL,
+edtech_platform,exam_sessions,completed_at,timestamp,timestamp,YES,,NULL,
+edtech_platform,exam_sessions,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,exam_sessions,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,exams,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,exams,subject_id,char,char(36),NO,MUL,NULL,
+edtech_platform,exams,created_by,char,char(36),YES,MUL,NULL,
+edtech_platform,exams,title,varchar,varchar(255),NO,,NULL,
+edtech_platform,exams,start_time,timestamp,timestamp,NO,MUL,NULL,
+edtech_platform,exams,duration_mins,int,int,NO,,NULL,
+edtech_platform,exams,total_marks,int,int,NO,,NULL,
+edtech_platform,exams,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,exams,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,inquiries,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,inquiries,name,varchar,varchar(255),NO,,NULL,
+edtech_platform,inquiries,email,varchar,varchar(255),NO,,NULL,
+edtech_platform,inquiries,message,text,text,NO,,NULL,
+edtech_platform,inquiries,status,enum,"enum('NEW','RESOLVED')",YES,,NEW,
+edtech_platform,inquiries,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,inquiries,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,order_items,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,order_items,book_order_id,char,char(36),NO,MUL,NULL,
+edtech_platform,order_items,book_id,char,char(36),NO,MUL,NULL,
+edtech_platform,order_items,quantity,int,int,NO,,1,
+edtech_platform,order_items,price_at_purchase,decimal,"decimal(10,2)",NO,,NULL,
+edtech_platform,payment_orders,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,payment_orders,user_id,char,char(36),NO,MUL,NULL,
+edtech_platform,payment_orders,gateway_order_id,varchar,varchar(255),YES,UNI,NULL,
+edtech_platform,payment_orders,amount,decimal,"decimal(10,2)",NO,,NULL,
+edtech_platform,payment_orders,currency,varchar,varchar(10),YES,,INR,
+edtech_platform,payment_orders,tax_amount,decimal,"decimal(10,2)",YES,,0.00,
+edtech_platform,payment_orders,discount_amount,decimal,"decimal(10,2)",YES,,0.00,
+edtech_platform,payment_orders,status,enum,"enum('PENDING','SUCCESS','FAILED')",YES,,PENDING,
+edtech_platform,payment_orders,payment_method,varchar,varchar(50),YES,,NULL,
+edtech_platform,payment_orders,invoice_url,varchar,varchar(500),YES,,NULL,
+edtech_platform,payment_orders,version_id,int,int,YES,,1,
+edtech_platform,payment_orders,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,payment_orders,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,questions,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,questions,exam_id,char,char(36),NO,MUL,NULL,
+edtech_platform,questions,created_by,char,char(36),YES,MUL,NULL,
+edtech_platform,questions,question_text,text,text,NO,,NULL,
+edtech_platform,questions,options,json,json,NO,,NULL,
+edtech_platform,questions,correct_option,varchar,varchar(10),NO,,NULL,
+edtech_platform,questions,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,questions,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,school_profiles,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,school_profiles,user_id,char,char(36),NO,MUL,NULL,
+edtech_platform,school_profiles,school_name,varchar,varchar(255),NO,,NULL,
+edtech_platform,school_profiles,school_code,varchar,varchar(50),YES,UNI,NULL,
+edtech_platform,school_profiles,board_name,varchar,varchar(100),YES,,NULL,
+edtech_platform,school_profiles,affiliation_number,varchar,varchar(100),YES,,NULL,
+edtech_platform,school_profiles,udise_code,varchar,varchar(50),YES,UNI,NULL,
+edtech_platform,school_profiles,address_data,json,json,YES,,NULL,
+edtech_platform,school_profiles,principal_data,json,json,YES,,NULL,
+edtech_platform,school_profiles,coordinator_data,json,json,YES,,NULL,
+edtech_platform,school_profiles,is_verified,tinyint,tinyint(1),YES,,0,
+edtech_platform,school_profiles,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,school_profiles,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,session_answers,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,session_answers,session_id,char,char(36),NO,MUL,NULL,
+edtech_platform,session_answers,question_id,char,char(36),NO,MUL,NULL,
+edtech_platform,session_answers,selected_option,varchar,varchar(10),YES,,NULL,
+edtech_platform,session_answers,saved_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,student_profiles,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,student_profiles,user_id,char,char(36),NO,MUL,NULL,
+edtech_platform,student_profiles,school_id,char,char(36),YES,MUL,NULL,
+edtech_platform,student_profiles,first_name,varchar,varchar(100),NO,,NULL,
+edtech_platform,student_profiles,last_name,varchar,varchar(100),NO,,NULL,
+edtech_platform,student_profiles,date_of_birth,date,date,YES,,NULL,
+edtech_platform,student_profiles,class_grade,varchar,varchar(20),YES,,NULL,
+edtech_platform,student_profiles,parent_data,json,json,YES,,NULL,
+edtech_platform,student_profiles,address_data,json,json,YES,,NULL,
+edtech_platform,student_profiles,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,student_profiles,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,subjects,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,subjects,name,varchar,varchar(255),NO,,NULL,
+edtech_platform,subjects,syllabus_url,varchar,varchar(500),YES,,NULL,
+edtech_platform,subjects,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,subjects,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,users,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
+edtech_platform,users,email,varchar,varchar(255),NO,UNI,NULL,
+edtech_platform,users,password_hash,varchar,varchar(255),NO,,NULL,
+edtech_platform,users,role,enum,"enum('STUDENT','SCHOOL_ADMIN','SYS_ADMIN')",NO,MUL,NULL,
+edtech_platform,users,status,enum,"enum('ACTIVE','INACTIVE','SUSPENDED')",YES,,ACTIVE,
+edtech_platform,users,is_email_verified,tinyint,tinyint(1),YES,,0,
+edtech_platform,users,failed_login_attempts,int,int,YES,,0,
+edtech_platform,users,last_login_at,timestamp,timestamp,YES,,NULL,
+edtech_platform,users,password_reset_token,varchar,varchar(255),YES,,NULL,
+edtech_platform,users,reset_token_expires_at,timestamp,timestamp,YES,,NULL,
+edtech_platform,users,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
+edtech_platform,users,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+edtech_platform,users,deleted_at,timestamp,timestamp,YES,,NULL,

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.turbo/
+
+.env
+*.sqlite
+*.sqlite3
+
+logs/
+services/*/logs/
+services/*/dist/
+packages/*/dist/
