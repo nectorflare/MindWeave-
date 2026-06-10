@@ -70,7 +70,7 @@ export default function StudyResources() {
                 <p className="description">{book.description}</p>
 
                 <div className="btn-group">
-                  <button className="download-btn">⬇ Download PDF</button>
+                  <button className="download-btn">Buy Now</button>
 
                   <button className="preview-btn">👁 Preview</button>
                 </div>

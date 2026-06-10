@@ -44,9 +44,11 @@ function Testimonials() {
 
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={20}
-        slidesPerView={1}
+        centeredSlides={true}
+        slidesPerView={1.3}
+        spaceBetween={30}
         navigation
+        loop={true}
         pagination={{ clickable: true }}
         autoplay={{
           delay: 3000,
@@ -54,10 +56,13 @@ function Testimonials() {
         }}
         breakpoints={{
           768: {
-            slidesPerView: 1,
+            slidesPerView: 1.4,
           },
           1024: {
-            slidesPerView: 1,
+            slidesPerView: 1.6,
+          },
+          1200: {
+            slidesPerView: 1.8,
           },
         }}
       >

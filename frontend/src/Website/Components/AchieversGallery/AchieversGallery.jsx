@@ -33,11 +33,11 @@ export default function AchieversGallery() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const slider = setInterval(() => {
-      setActiveIndex((prev) =>
-        prev === galleryData.length - 1 ? 0 : prev + 1,
-      );
-    }, 3000);
+    // const slider = setInterval(() => {
+    //   setActiveIndex((prev) =>
+    //     prev === galleryData.length - 1 ? 0 : prev + 1,
+    //   );
+    // }, 3000);
 
     return () => clearInterval(slider);
   }, []);

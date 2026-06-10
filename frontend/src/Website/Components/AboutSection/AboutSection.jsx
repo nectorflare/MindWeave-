@@ -1,6 +1,7 @@
 import "./AboutSection.css";
 // import aboutImage from "../../../assets/about-image.png";
-import logo from "../../../assets/logo.png";
+// import logo from "../../../assets/logo.png";
+import logo from "../../../assets/logo.jpeg";
 import { Rocket } from "lucide-react";
 import bulletIcon from "../../../assets/bullet-point.png";
 

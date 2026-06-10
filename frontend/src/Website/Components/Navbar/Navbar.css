@@ -27,31 +27,38 @@
 
 .navbar {
   background: #e8bb67;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  margin: 4px 0px 15px 0px;
   padding: 0 40px;
-  min-height: 80px;
+  height: 60px;
+  position: relative;
+}
 
-  border-top: 4px solid #fff;
+/* LOGO */
+
+.logo {
+  position: absolute;
+  left: 40px;
+  top: -20px;
+  z-index: 10;
 }
 
 .logo img {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
+  border-radius: 100%;
 }
 
 .nav-links {
   list-style: none;
-
   display: flex;
   align-items: center;
   gap: 30px;
-
   flex-wrap: wrap;
+  margin-left: 400px;
 }
 
 .nav-links li {

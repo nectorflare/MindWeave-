@@ -29,7 +29,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Landing from "../Website/Pages/Landing/Landing";
 import Home from "../Website/Pages/Home/Home";
-
+import AboutUs from "../Website/Pages/AboutUs/AboutUs";
 import StudentLogin from "../Auth/Student/StudentLogin";
 import StudentRegistration from "../Auth/Student/StudentRegistration";
 
@@ -48,6 +48,7 @@ function AppRoutes() {
       <Route path="/school-registration" element={<SchoolRegistration />} />
 
       <Route path="/home" element={<Home />} />
+      <Route path="/about-us" element={<AboutUs />} />
     </Routes>
   );
 }

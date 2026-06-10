@@ -58,7 +58,7 @@ function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 Mind Weave Foundation. All rights reserved.</p>
+          <p>© 2026 Nectorflare Private Limited. All rights reserved.</p>
 
           <div className="footer-links">
             <a href="/">Privacy Policy</a>
