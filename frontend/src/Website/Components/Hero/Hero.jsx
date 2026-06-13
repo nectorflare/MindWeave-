@@ -125,14 +125,14 @@ function Hero() {
           <p>REGISTERED SCHOOLS</p>
         </div>
 
-        <div className="divider"></div>
+        <div className="stats-divider"></div>
 
         <div className="stat-item">
           <h2>{events}+</h2>
           <p>EVENTS ORGANIZED</p>
         </div>
 
-        <div className="divider"></div>
+        <div className="stats-divider"></div>
 
         <div className="stat-item">
           <h2>{students.toLocaleString()}+</h2>

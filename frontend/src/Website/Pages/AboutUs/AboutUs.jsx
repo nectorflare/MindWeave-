@@ -4,6 +4,7 @@ import buildingImage from "../../../assets/building.jpg";
 import testimonialImage from "../../../assets/testimonial-user.jpg";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import { Link } from "react-router-dom";
 const AboutUs = () => {
   const features = [
     {
@@ -44,7 +45,9 @@ const AboutUs = () => {
         {/* Hero Section */}
         <section className="hero">
           <div className="hero-content">
-            <p className="breadcrumb">Home &gt; About Us</p>
+            <div className="breadcrumb">
+              <Link to="/">Home</Link> &gt; <span>About Us</span>
+            </div>
 
             <h1>
               About <br />
@@ -58,8 +61,13 @@ const AboutUs = () => {
             </p>
 
             <div className="hero-buttons">
-              <button className="primary-btn">Explore Olympiads</button>
-              <button className="secondary-btn">Contact Us</button>
+              <Link to="/olympiads-list">
+                <button className="primary-btn">Explore Olympiads</button>
+              </Link>
+
+              <Link to="/contact-us">
+                <button className="secondary-btn">Contact Us</button>
+              </Link>
             </div>
           </div>
         </section>

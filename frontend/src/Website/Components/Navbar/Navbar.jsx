@@ -1,6 +1,6 @@
 import "./Navbar.css";
 import logo from "../../../assets/logo.jpeg";
-
+import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <>
@@ -20,13 +20,21 @@ function Navbar() {
         </div>
 
         <ul className="nav-links">
-          <li>SUBJECTS</li>
-          <li>EXAM DETAILS</li>
+          <Link to="/home">HOME</Link>
+          <Link to="/olympiads-list">OLYMPIADS</Link>
           <li>QUIZZES</li>
-          <li>CAREER LAB</li>
-          <li>CONTACT US</li>
-          <li>FREE TRIAL</li>
+          <Link to="/books-store">BOOK STORE</Link>
         </ul>
+
+        {/* Login Dropdown */}
+        <div className="login-dropdown">
+          <button className="login-button">LOGIN ▾</button>
+
+          <div className="dropdown-menu">
+            <Link to="/student-login">Student Login</Link>
+            <Link to="/school-login">School Login</Link>
+          </div>
+        </div>
       </nav>
     </>
   );

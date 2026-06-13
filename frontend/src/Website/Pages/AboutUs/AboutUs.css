@@ -10,6 +10,15 @@
   color: #222;
 }
 
+.breadcrumb a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
 /* Hero */
 
 .hero {

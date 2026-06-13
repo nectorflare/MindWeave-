@@ -1,5 +1,5 @@
 import "./Footer.css";
-
+import { Link } from "react-router-dom";
 function Footer() {
   return (
     <footer className="footer">
@@ -46,23 +46,38 @@ function Footer() {
 
           {/* Contact */}
           <div className="footer-column">
-            <h4>CONTACT</h4>
+            <h4>QUICK LINKS</h4>
 
             <ul>
-              <li>info@mindweavefoundation.org</li>
-              <li>+91 80000 00000</li>
-              <li>WhatsApp Channel</li>
-              <li>Register Your School</li>
+              <li>
+                <Link to="/about-us">About Us</Link>
+              </li>
+
+              <li>
+                <Link to="/contact-us">Contact Us</Link>
+              </li>
+
+              <li>
+                <Link to="/faq">FAQ</Link>
+              </li>
+
+              <li>
+                <Link to="/privacy-policy">Privacy Policy</Link>
+              </li>
+
+              <li>
+                <Link to="/terms-conditions">Terms & Conditions</Link>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
           <p>© 2026 Nectorflare Private Limited. All rights reserved.</p>
-
           <div className="footer-links">
-            <a href="/">Privacy Policy</a>
-            <a href="/">Terms of Use</a>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+
+            <Link to="/terms-and-conditions">Terms of Use</Link>
           </div>
         </div>
       </div>
