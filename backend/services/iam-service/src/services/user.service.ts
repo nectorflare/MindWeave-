@@ -223,3 +223,125 @@ export const registerUser = async (payload: RegisterUserPayload) => {
 
   return studentProfile.toJSON();
 };
+
+type UpdateSchoolPayload = Partial<Omit<RegisterSchoolPayload, 'password' | 'confirmPassword'>>;
+type UpdateStudentPayload = Partial<Omit<RegisterUserPayload, 'password' | 'confirmPassword'>>;
+
+export const getAllSchools = async () => {
+  const schools = await SchoolProfile.findAll();
+  return schools.map(school => school.toJSON());
+};
+
+export const getAllStudents = async () => {
+  const students = await StudentProfile.findAll();
+  return students.map(student => student.toJSON());
+};
+
+export const getSchoolById = async (schoolId: string) => {
+  const school = await SchoolProfile.findByPk(schoolId);
+  if (!school) {
+    throw new Error('School not found');
+  }
+  return school.toJSON();
+};
+
+export const getStudentById = async (studentId: string) => {
+  const student = await StudentProfile.findByPk(studentId);
+  if (!student) {
+    throw new Error('Student not found');
+  }
+  return student.toJSON();
+};
+
+export const updateSchool = async (schoolId: string, payload: UpdateSchoolPayload) => {
+  const school = await SchoolProfile.findByPk(schoolId);
+  if (!school) {
+    throw new Error('School not found');
+  }
+
+  const updateData: Partial<Record<string, any>> = {};
+
+  if (payload.schoolName !== undefined) updateData.school_name = payload.schoolName.trim();
+  if (payload.schoolCode !== undefined) updateData.school_code = payload.schoolCode?.trim() || null;
+  if (payload.schoolType !== undefined) updateData.school_type = payload.schoolType.trim();
+  if (payload.boardName !== undefined) updateData.board_name = payload.boardName.trim();
+  if (payload.affiliationNumber !== undefined) updateData.affiliation_number = payload.affiliationNumber.trim();
+  if (payload.udiseCode !== undefined) updateData.udise_code = payload.udiseCode.trim();
+  if (payload.establishedYear !== undefined) updateData.established_year = payload.establishedYear.trim();
+  if (payload.addressLine1 !== undefined) updateData.address_line1 = payload.addressLine1.trim();
+  if (payload.addressLine2 !== undefined) updateData.address_line2 = payload.addressLine2?.trim() || null;
+  if (payload.city !== undefined) updateData.city = payload.city.trim();
+  if (payload.district !== undefined) updateData.district = payload.district.trim();
+  if (payload.state !== undefined) updateData.state = payload.state.trim();
+  if (payload.pincode !== undefined) updateData.pincode = payload.pincode.trim();
+  if (payload.country !== undefined) updateData.country = payload.country.trim();
+  if (payload.principalName !== undefined) updateData.principal_name = payload.principalName.trim();
+  if (payload.principalMobileNumber !== undefined) updateData.principal_mobile_number = payload.principalMobileNumber.trim();
+  if (payload.principalEmailId !== undefined) updateData.principal_email_id = payload.principalEmailId.trim();
+  if (payload.olympiadCoordinatorName !== undefined) updateData.olympiad_coordinator_name = payload.olympiadCoordinatorName.trim();
+  if (payload.designation !== undefined) updateData.designation = payload.designation.trim();
+  if (payload.mobileNumber !== undefined) updateData.mobile_number = payload.mobileNumber.trim();
+  if (payload.whatsappNumber !== undefined) updateData.whatsapp_number = payload.whatsappNumber.trim();
+  if (payload.coordinatorEmailId !== undefined) updateData.coordinator_email_id = payload.coordinatorEmailId.trim();
+
+  if (payload.emailId !== undefined) {
+    const email = payload.emailId.trim();
+    if (email !== '') {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser && existingUser.id !== school.user_id) {
+        throw new Error('Email already in use');
+      }
+      const user = await User.findByPk(school.user_id);
+      if (user) {
+        await user.update({ email });
+      }
+    }
+  }
+
+  await school.update(updateData);
+  return school.toJSON();
+};
+
+export const updateStudent = async (studentId: string, payload: UpdateStudentPayload) => {
+  const student = await StudentProfile.findByPk(studentId);
+  if (!student) {
+    throw new Error('Student not found');
+  }
+
+  const updateData: Partial<Record<string, any>> = {};
+
+  if (payload.firstName !== undefined) updateData.first_name = payload.firstName.trim();
+  if (payload.lastName !== undefined) updateData.last_name = payload.lastName.trim();
+  if (payload.gender !== undefined) updateData.gender = payload.gender.trim();
+  if (payload.dateOfBirth !== undefined) updateData.date_of_birth = payload.dateOfBirth;
+  if (payload.classGrade !== undefined) updateData.class_grade = payload.classGrade.trim();
+  if (payload.schoolName !== undefined) updateData.school_name = payload.schoolName.trim();
+  if (payload.city !== undefined) updateData.city = payload.city.trim();
+  if (payload.state !== undefined) updateData.state = payload.state.trim();
+  if (payload.fatherName !== undefined) updateData.father_name = payload.fatherName.trim();
+  if (payload.motherName !== undefined) updateData.mother_name = payload.motherName.trim();
+  if (payload.parentMobileNumber !== undefined) updateData.parent_mobile_number = payload.parentMobileNumber?.trim() || null;
+  if (payload.emailId !== undefined) updateData.email_id = payload.emailId.trim();
+  if (payload.mobileNumber !== undefined) updateData.mobile_number = payload.mobileNumber.trim();
+  if (payload.address !== undefined) updateData.address = payload.address.trim();
+  if (payload.addressCity !== undefined) updateData.address_city = payload.addressCity.trim();
+  if (payload.addressState !== undefined) updateData.address_state = payload.addressState.trim();
+  if (payload.pincode !== undefined) updateData.pincode = payload.pincode.trim();
+
+  if (payload.emailId !== undefined) {
+    const email = payload.emailId.trim();
+    if (email !== '') {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser && existingUser.id !== student.user_id) {
+        throw new Error('Email already in use');
+      }
+      const user = await User.findByPk(student.user_id);
+      if (user) {
+        await user.update({ email });
+      }
+    }
+  }
+
+  await student.update(updateData);
+  return student.toJSON();
+};
