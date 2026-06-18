@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./OlympiadDetails.css";
+import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
 // ── Data ─────────────────────────────────────────────────────────────────────
@@ -251,16 +252,25 @@ export default function OlympiadDetails() {
   return (
     <>
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
+
+        <span className="breadcrumb-separator">›</span>
+
+        <Link to="/olympiads-list" className="breadcrumb-link">
+          Olympiads
+        </Link>
+
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">
+          International Science Olympiad (ISCO)
+        </span>
+      </div>
       <main className="od-page">
         <div className="od-container">
-          {/* Breadcrumb */}
-          <div className="od-breadcrumb">
-            Home &gt; Olympiads &gt;{" "}
-            <span className="od-breadcrumb-active">
-              International Science Olympiad (ISCO)
-            </span>
-          </div>
-
           {/* Hero */}
           <section className="od-hero-layout">
             <div className="od-hero-card">

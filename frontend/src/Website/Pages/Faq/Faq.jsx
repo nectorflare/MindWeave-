@@ -123,14 +123,20 @@ export default function Faq() {
   return (
     <>
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
+
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">FAQ</span>
+      </div>
       <main className="faq__page">
         {/* Hero */}
         <section className="faq__hero">
           <div className="faq__container faq__hero-wrap">
             <div className="faq__hero-content">
-              <div className="faq__breadcrumb">
-                <Link to="/">Home</Link> &gt; FAQ
-              </div>
               <h1>
                 Frequently
                 <br />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ContactUs.css";
 import contactIllustration from "../../../assets/email-phone.png";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -14,17 +14,41 @@ import {
 } from "react-icons/fa";
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+    if (formData.phone && formData.phone.length !== 10) {
+      alert("Please enter a valid 10-digit phone number");
+      return;
+    }
+    alert("Message sent successfully!");
+  };
   return (
     <>
       <Navbar />
-      <div className="contact-page">
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <Link to="/">Home</Link>
-          <span className="arrow">›</span>
-          <span>Contact Us</span>
-        </div>
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
 
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">Contact Us</span>
+      </div>
+      <div className="contact-page">
         {/* Header */}
         <div className="contact-header">
           <div className="contact-heading">
@@ -106,29 +130,59 @@ const ContactUs = () => {
               Fill out the form below and we will get back to you as soon as
               possible.
             </p>
-
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
                   <label>Full Name *</label>
-                  <input type="text" placeholder="Enter your full name" />
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
+                  />
                 </div>
 
                 <div className="form-group">
                   <label>Email Address *</label>
-                  <input type="email" placeholder="Enter your email" />
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                  />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
                   <label>Phone Number</label>
-                  <input type="text" placeholder="Enter your phone number" />
+                  <input
+                    type="text"
+                    placeholder="Enter 10-digit phone number"
+                    value={formData.phone}
+                    inputMode="numeric"
+                    maxLength={10}
+                    onChange={(e) => {
+                      const val = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+                      setFormData({ ...formData, phone: val });
+                    }}
+                  />
                 </div>
 
                 <div className="form-group">
                   <label>Subject *</label>
-                  <select>
+                  <select
+                    value={formData.subject}
+                    onChange={(e) =>
+                      setFormData({ ...formData, subject: e.target.value })
+                    }
+                  >
                     <option>Select Subject</option>
                     <option>General Inquiry</option>
                     <option>Support</option>
@@ -142,7 +196,11 @@ const ContactUs = () => {
                 <textarea
                   rows="5"
                   placeholder="Write your message here..."
-                ></textarea>
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                />
               </div>
 
               <button type="submit" className="send-btn">

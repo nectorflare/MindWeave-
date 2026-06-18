@@ -48,7 +48,7 @@ import SchoolProfile from "../Website/Pages/SchoolProfile/SchoolProfile";
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
+      <Route path="/" element={<Home />} />
 
       <Route path="/student-login" element={<StudentLogin />} />
       <Route path="/student-registration" element={<StudentRegistration />} />

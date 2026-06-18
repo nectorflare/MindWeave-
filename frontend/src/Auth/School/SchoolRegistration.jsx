@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./SchoolRegistration.css";
+
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
 
@@ -212,6 +214,8 @@ function InputField({
   type = "text",
   value,
   onChange,
+  inputMode,
+  maxLength,
 }) {
   return (
     <div className="input-wrapper">
@@ -222,6 +226,8 @@ function InputField({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        inputMode={inputMode}
+        maxLength={maxLength}
         className={icon ? "has-icon" : ""}
       />
     </div>
@@ -255,6 +261,7 @@ function SectionHeading({ icon, title }) {
 
 // ── Main Component ──
 export default function SchoolRegistration() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     schoolName: "",
     schoolType: "",
@@ -286,12 +293,38 @@ export default function SchoolRegistration() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+  // };
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "pincode") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 6);
+      setFormData({ ...formData, pincode: numericValue });
+      return;
+    }
+
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
   const handleSubmit = async () => {
+    if (!emailRegex.test(formData.principalEmailId)) {
+      alert("Principal Email is invalid");
+      return;
+    }
+    if (!emailRegex.test(formData.coordinatorEmailId)) {
+      alert("Coordinator Email is invalid");
+      return;
+    }
+    if (!emailRegex.test(formData.emailId)) {
+      alert("School Email is invalid");
+      return;
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/iam/register-school`,
@@ -323,8 +356,18 @@ export default function SchoolRegistration() {
       <Navbar />
       <div className="page-bg">
         {/* Breadcrumb */}
+        {/* Breadcrumb */}
         <div className="breadcrumb">
-          <span className="breadcrumb-home">Home</span>
+          <span className="breadcrumb-home" onClick={() => navigate("/")}>
+            Home
+          </span>
+          <span className="breadcrumb-sep"> &rsaquo; </span>
+          <span
+            className="breadcrumb-home"
+            onClick={() => navigate("/school-login")}
+          >
+            Login
+          </span>
           <span className="breadcrumb-sep"> &rsaquo; </span>
           <span className="breadcrumb-current">School Registration</span>
         </div>
@@ -608,11 +651,19 @@ export default function SchoolRegistration() {
                 <label>
                   Pincode <span className="req">*</span>
                 </label>
-                <InputField
+                {/* <InputField
                   name="pincode"
                   placeholder="Enter pincode"
                   value={formData.pincode}
                   onChange={handleChange}
+                /> */}
+                <InputField
+                  name="pincode"
+                  placeholder="Enter 6-digit pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={6}
                 />
               </div>
               <div className="field-group">

@@ -41,14 +41,19 @@ const AboutUs = () => {
   return (
     <>
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
+
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-current">About Us</span>
+      </div>
       <div className="about-page">
         {/* Hero Section */}
         <section className="hero">
           <div className="hero-content">
-            <div className="breadcrumb">
-              <Link to="/">Home</Link> &gt; <span>About Us</span>
-            </div>
-
             <h1>
               About <br />
               Mind Weaver <br />

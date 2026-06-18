@@ -1,7 +1,7 @@
 import "./OlympiadsList.css";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaAtom,
   FaSquareRootAlt,
@@ -97,11 +97,16 @@ function OlampiadsList() {
   return (
     <>
       <Navbar />
-      <section className="olympiads-list">
-        <div className="breadcrumb">
-          Home <span>&gt;</span> Olympiads
-        </div>
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
 
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">Olympiads</span>
+      </div>
+      <section className="olympiads-list">
         <div className="heading-wrapper">
           <h1>Our Olympiads</h1>
 

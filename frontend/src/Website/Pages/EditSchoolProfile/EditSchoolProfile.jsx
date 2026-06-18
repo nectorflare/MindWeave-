@@ -254,6 +254,22 @@ export default function EditSchoolProfile({
   }, [isOpen, onClose]);
 
   const handleChange = (field, value) => {
+    if (field === "pincode") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 6);
+      setForm((prev) => ({ ...prev, pincode: numericValue }));
+      setErrors((prev) => ({ ...prev, pincode: "" }));
+      return;
+    }
+    if (
+      ["principalMobileNumber", "mobileNumber", "whatsappNumber"].includes(
+        field,
+      )
+    ) {
+      const numericValue = value.replace(/\D/g, "").slice(0, 10);
+      setForm((prev) => ({ ...prev, [field]: numericValue }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+      return;
+    }
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
   };
@@ -265,25 +281,17 @@ export default function EditSchoolProfile({
 
   const validate = () => {
     const newErrors = {};
-    if (!form.principalEmailId?.includes("@"))
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(form.principalEmailId))
       newErrors.principalEmailId = "Enter a valid email.";
-    if (!form.coordinatorEmailId?.includes("@"))
+    if (!emailRegex.test(form.coordinatorEmailId))
       newErrors.coordinatorEmailId = "Enter a valid email.";
-    if (!form.emailId?.includes("@"))
+    if (!emailRegex.test(form.emailId))
       newErrors.emailId = "Enter a valid email.";
-    if (form.principalMobileNumber?.replace(/\D/g, "").length < 10)
+    if (form.principalMobileNumber?.replace(/\D/g, "").length !== 10)
       newErrors.principalMobileNumber = "Enter valid 10-digit number.";
-    if (form.mobileNumber?.replace(/\D/g, "").length < 10)
+    if (form.mobileNumber?.replace(/\D/g, "").length !== 10)
       newErrors.mobileNumber = "Enter valid 10-digit number.";
-    if (!form.principalName?.trim())
-      newErrors.principalName = "Principal name is required.";
-    if (!form.olympiadCoordinatorName?.trim())
-      newErrors.olympiadCoordinatorName = "Coordinator name is required.";
-    if (passwords.password && passwords.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters.";
-    if (passwords.password && passwords.password !== passwords.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match.";
-    return newErrors;
   };
 
   const handleSave = () => {
@@ -323,6 +331,14 @@ export default function EditSchoolProfile({
           {label} {required && <span className="esp-required">*</span>}
         </label>
         <div className={`esp-field-row${isEditing ? " esp-editing" : ""}`}>
+          {/* <input
+            className="esp-input"
+            type={type}
+            value={form[fieldKey] || ""}
+            placeholder={placeholder}
+            disabled={!isEditing}
+            onChange={(e) => handleChange(fieldKey, e.target.value)}
+          /> */}
           <input
             className="esp-input"
             type={type}
@@ -330,6 +346,27 @@ export default function EditSchoolProfile({
             placeholder={placeholder}
             disabled={!isEditing}
             onChange={(e) => handleChange(fieldKey, e.target.value)}
+            inputMode={
+              [
+                "pincode",
+                "principalMobileNumber",
+                "mobileNumber",
+                "whatsappNumber",
+              ].includes(fieldKey)
+                ? "numeric"
+                : undefined
+            }
+            maxLength={
+              fieldKey === "pincode"
+                ? 6
+                : [
+                      "principalMobileNumber",
+                      "mobileNumber",
+                      "whatsappNumber",
+                    ].includes(fieldKey)
+                  ? 10
+                  : undefined
+            }
           />
           <button
             className="esp-edit-inline-btn"

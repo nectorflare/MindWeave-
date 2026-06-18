@@ -1,3 +1,28 @@
+.breadcrumb {
+  padding: 10px 40px;
+  font-size: 14px;
+  background-color: #f8f8f8;
+}
+
+.breadcrumb-home {
+  cursor: pointer;
+  color: #f59e0b;
+}
+
+.breadcrumb-home:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  margin: 0 6px;
+  color: #999;
+}
+
+.breadcrumb-current {
+  color: #6b7280;
+  font-weight: 600;
+}
+
 .login-page {
   background: #f8f8f8;
   padding: 60px 8%;

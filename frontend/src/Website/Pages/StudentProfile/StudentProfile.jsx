@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./StudentProfile.css";
+import { Link } from "react-router-dom";
 import EditProfilePanel from "../Editprofilepanel/Editprofilepanel";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
@@ -196,16 +197,16 @@ export default function MyProfile() {
   return (
     <>
       <Navbar />
-      <div className="mp-root">
-        {/* Breadcrumb */}
-        <div className="mp-breadcrumb">
-          <span className="mp-breadcrumb-home" onClick={() => handleNav("/")}>
-            Home
-          </span>
-          <span className="mp-breadcrumb-sep"> &gt; </span>
-          <span className="mp-breadcrumb-current">My Profile</span>
-        </div>
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
 
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">My Profile</span>
+      </div>
+      <div className="mp-root">
         <div className="mp-layout">
           {/* Sidebar */}
           <aside className="mp-sidebar">

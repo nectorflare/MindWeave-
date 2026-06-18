@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import "./BookList.css";
+import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import banner from "../../../assets/book-banner.jpg";
 import bookImage from "../../../assets/book-image.jpg";
@@ -122,6 +123,15 @@ function BookList() {
   return (
     <>
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
+
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">Books Store</span>
+      </div>
       <div className="book-page">
         <div className="hero-banner">
           <div className="hero-content">

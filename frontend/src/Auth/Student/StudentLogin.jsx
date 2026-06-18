@@ -20,6 +20,12 @@ function StudentLogin() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(loginData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/login`,
@@ -52,6 +58,14 @@ function StudentLogin() {
   return (
     <>
       <Navbar />
+      {/* Breadcrumb */}
+      <div className="breadcrumb">
+        <span className="breadcrumb-home" onClick={() => navigate("/")}>
+          Home
+        </span>
+        <span className="breadcrumb-sep"> &rsaquo; </span>
+        <span className="breadcrumb-current">Login</span>
+      </div>
       <section className="login-page">
         <div className="login-wrapper">
           {/* Left Side */}

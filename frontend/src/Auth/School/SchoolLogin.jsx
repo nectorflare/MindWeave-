@@ -20,6 +20,12 @@ function StudentLogin() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(loginData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
     try {
       // const response = await fetch("http://localhost:3000/api/login", {
       const response = await fetch(
@@ -53,7 +59,14 @@ function StudentLogin() {
   return (
     <>
       <Navbar />
+
       <section className="login-page">
+        {/* Breadcrumb */}
+        <div className="breadcrumb">
+          <span onClick={() => navigate("/")}>Home</span>
+          <span className="separator"> / </span>
+          <span className="active">Login</span>
+        </div>
         <div className="login-wrapper">
           {/* Left Side */}
           <div className="login-left">

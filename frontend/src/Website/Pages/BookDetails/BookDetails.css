@@ -37,14 +37,32 @@
 }
 
 /* ---- Breadcrumb ---- */
-.bd-breadcrumb {
-  font-size: 13px;
-  color: #6b7894;
-  margin-bottom: 25px;
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
 }
 
-.bd-breadcrumb-active {
-  color: #f59b00;
+.breadcrumb-link {
+  text-decoration: none;
+  color: #64748b;
+  transition: 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #1e3a5f;
+}
+
+.breadcrumb-separator {
+  color: #94a3b8;
+}
+
+.breadcrumb-active {
+  color: #1e3a5f;
+  font-weight: 600;
 }
 
 /* ---- Product Layout ---- */

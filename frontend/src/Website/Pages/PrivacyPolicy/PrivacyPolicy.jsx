@@ -106,14 +106,19 @@ function PrivacyPolicy() {
     <div className="privacy-page">
       <>
         <Navbar />
+        <div className="breadcrumb">
+          <Link to="/" className="breadcrumb-link">
+            Home
+          </Link>
+
+          <span className="breadcrumb-separator">›</span>
+
+          <span className="breadcrumb-active">Privacy Policy</span>
+        </div>
         {/* HERO */}
         <section className="privacy-hero">
           <div className="privacy-hero-overlay">
             <div className="privacy-hero-content">
-              <div className="breadcrumb">
-                <Link to="/">Home</Link> &gt; <span>Privacy Policy</span>
-              </div>
-
               <h1>Privacy Policy</h1>
 
               <p>

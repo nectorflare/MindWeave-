@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./StudentRegistration.css";
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
+import { Link } from "react-router-dom";
 
 const USER_ICON = (
   <svg
@@ -204,6 +205,10 @@ function InputField({
   value,
   onChange,
   children,
+  inputMode,
+  maxLength,
+  min,
+  max,
 }) {
   return (
     <div className="input-wrapper">
@@ -215,6 +220,10 @@ function InputField({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          inputMode={inputMode}
+          maxLength={maxLength}
+          min={min}
+          max={max}
           className={icon ? "has-icon" : ""}
         />
       )}
@@ -277,6 +286,12 @@ export default function StudentRegistration() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    if (name === "pincode") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 6);
+      setFormData((prev) => ({ ...prev, pincode: numericValue }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -295,6 +310,30 @@ export default function StudentRegistration() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.emailId)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+    if (formData.dateOfBirth) {
+      const dob = new Date(formData.dateOfBirth);
+      const today = new Date();
+
+      const minDate = new Date(today);
+      minDate.setFullYear(today.getFullYear() - 50);
+
+      const maxDate = new Date(today);
+      maxDate.setFullYear(today.getFullYear() - 5);
+
+      if (dob < minDate) {
+        alert("Date of Birth cannot be more than 50 years ago");
+        return;
+      }
+      if (dob > maxDate) {
+        alert("Student must be at least 5 years old");
+        return;
+      }
+    }
     if (formData.password !== formData.confirmPassword) {
       alert("Password and Confirm Password must match.");
       return;
@@ -328,13 +367,18 @@ export default function StudentRegistration() {
   return (
     <>
       <Navbar />
+
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-home">
+          Home
+        </Link>
+
+        <span className="breadcrumb-sep">›</span>
+
+        <span className="breadcrumb-current">Student Registration</span>
+      </div>
       <div className="page-bg">
         {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <span className="breadcrumb-home">Home</span>
-          <span className="breadcrumb-sep"> &rsaquo; </span>
-          <span className="breadcrumb-current">Student Registration</span>
-        </div>
 
         {/* Page Title */}
         <div className="page-title-block">
@@ -516,6 +560,20 @@ export default function StudentRegistration() {
                   placeholder="DD / MM / YYYY"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
+                  min={
+                    new Date(
+                      new Date().setFullYear(new Date().getFullYear() - 50),
+                    )
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  max={
+                    new Date(
+                      new Date().setFullYear(new Date().getFullYear() - 5),
+                    )
+                      .toISOString()
+                      .split("T")[0]
+                  }
                 />
               </div>
               <div className="field-group">
@@ -713,9 +771,11 @@ export default function StudentRegistration() {
                 </label>
                 <InputField
                   name="pincode"
-                  placeholder="Enter pincode"
+                  placeholder="Enter 6-digit pincode"
                   value={formData.pincode}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={6}
                 />
               </div>
             </div>
@@ -802,9 +862,9 @@ export default function StudentRegistration() {
 
             <p className="login-link">
               Already have an account?{" "}
-              <a href="#" className="terms-link">
+              <Link to="/student-login" className="terms-link">
                 Login
-              </a>
+              </Link>
             </p>
           </div>
         </div>

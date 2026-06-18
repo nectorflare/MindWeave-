@@ -121,15 +121,19 @@ function TermsConditions() {
   return (
     <div className="terms-page">
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="breadcrumb-link">
+          Home
+        </Link>
 
+        <span className="breadcrumb-separator">›</span>
+
+        <span className="breadcrumb-active">My Profile</span>
+      </div>
       {/* HERO */}
       <section className="terms-hero">
         <div className="hero-overlay">
           <div className="terms-hero-content">
-            <div className="breadcrumb">
-              <Link to="/">Home</Link> &gt; <span>Terms & Conditions</span>
-            </div>
-
             <h1>Terms & Conditions</h1>
 
             <p>

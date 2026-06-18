@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./BookDetails.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import Footer from "../../Components/Footer/Footer";
 import Navbar from "../../Components/Navbar/Navbar";
 import bookImage from "../../../assets/book-image.jpg";
@@ -79,16 +80,31 @@ export default function BookDetails() {
   return (
     <>
       <Navbar />
+      <div className="breadcrumb">
+        <Link to="/" className="bd-breadcrumb-link">
+          Home
+        </Link>
+
+        <span className="bd-breadcrumb-separator">›</span>
+
+        <Link to="/books-store" className="bd-breadcrumb-link">
+          Books Store
+        </Link>
+
+        <span className="bd-breadcrumb-separator">›</span>
+
+        <Link to="/olympiad-books" className="bd-breadcrumb-link">
+          Olympiad Books
+        </Link>
+
+        <span className="bd-breadcrumb-separator">›</span>
+
+        <span className="bd-breadcrumb-active">
+          International Science Olympiad
+        </span>
+      </div>
       <main className="bd-page">
         <div className="bd-container">
-          {/* Breadcrumb */}
-          <div className="bd-breadcrumb">
-            Home &gt; Books Store &gt; Olympiad Books &gt;{" "}
-            <span className="bd-breadcrumb-active">
-              International Science Olympiad
-            </span>
-          </div>
-
           {/* Product Layout */}
           <section className="bd-product-layout">
             {/* Gallery */}
