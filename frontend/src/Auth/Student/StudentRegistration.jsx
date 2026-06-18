@@ -196,15 +196,6 @@ const grades = [
   "Class 12",
 ];
 
-const nationalities = [
-  "Indian",
-  "American",
-  "British",
-  "Canadian",
-  "Australian",
-  "Other",
-];
-
 function InputField({
   icon,
   name,
@@ -258,13 +249,10 @@ function SectionHeading({ icon, title }) {
 
 export default function StudentRegistration() {
   const [formData, setFormData] = useState({
-    fullName: "",
-    dateOfBirth: "",
+    firstName: "",
+    lastName: "",
     gender: "",
-    nationality: "",
-    emailId: "",
-    mobileNumber: "",
-    whatsappNumber: "",
+    dateOfBirth: "",
     classGrade: "",
     schoolName: "",
     city: "",
@@ -272,6 +260,8 @@ export default function StudentRegistration() {
     fatherName: "",
     motherName: "",
     parentMobileNumber: "",
+    emailId: "",
+    mobileNumber: "",
     password: "",
     confirmPassword: "",
     address: "",
@@ -286,22 +276,55 @@ export default function StudentRegistration() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.agreeTerms) {
-      alert("Please agree to the Terms & Conditions and Privacy Policy.");
+      alert("Please agree to Terms & Conditions and Privacy Policy.");
       return;
     }
+
+    // ADD THIS BLOCK HERE
+    if (!formData.emailId || !formData.mobileNumber || !formData.password) {
+      alert("Please fill required fields (Email, Mobile, Password)");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       alert("Password and Confirm Password must match.");
       return;
     }
-    console.log(JSON.stringify(formData, null, 2));
-    alert("Registration successful! Data printed in console.");
-  };
 
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/iam/register-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registration successful!");
+        console.log("Response:", data);
+      } else {
+        alert(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Server error. Please try again later.");
+    }
+  };
   return (
     <>
       <Navbar />
@@ -459,13 +482,26 @@ export default function StudentRegistration() {
             <div className="grid-2">
               <div className="field-group">
                 <label>
-                  Full Name <span className="req">*</span>
+                  First Name <span className="req">*</span>
                 </label>
                 <InputField
                   icon={USER_ICON}
-                  name="fullName"
-                  placeholder="Enter full name"
-                  value={formData.fullName}
+                  name="firstName"
+                  placeholder="Enter first name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>
+                  Last Name <span className="req">*</span>
+                </label>
+                <InputField
+                  icon={USER_ICON}
+                  name="lastName"
+                  placeholder="Enter last name"
+                  value={formData.lastName}
                   onChange={handleChange}
                 />
               </div>
@@ -497,21 +533,7 @@ export default function StudentRegistration() {
                   <option>Other</option>
                 </SelectField>
               </div>
-              <div className="field-group">
-                <label>
-                  Nationality <span className="req">*</span>
-                </label>
-                <SelectField
-                  name="nationality"
-                  value={formData.nationality}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Nationality</option>
-                  {nationalities.map((n) => (
-                    <option key={n}>{n}</option>
-                  ))}
-                </SelectField>
-              </div>
+
               <div className="field-group full-span">
                 <label>
                   Email Address <span className="req">*</span>
@@ -536,16 +558,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-              <div className="field-group">
-                <label>WhatsApp Number</label>
-                <InputField
-                  icon={WHATSAPP_ICON}
-                  name="whatsappNumber"
-                  placeholder="Enter WhatsApp number"
-                  value={formData.whatsappNumber}
-                  onChange={handleChange}
-                />
-              </div>
             </div>
 
             {/* ── Academic Information ── */}
@@ -563,8 +575,13 @@ export default function StudentRegistration() {
                 >
                   <option value="">Select Class / Grade</option>
                   {grades.map((g) => (
+                    <option key={g} value={g}>
+                      {g}
+                    </option>
+                  ))}{" "}
+                  {/* {grades.map((g) => (
                     <option key={g}>{g}</option>
-                  ))}
+                  ))} */}
                 </SelectField>
               </div>
               <div className="field-group">
@@ -605,6 +622,101 @@ export default function StudentRegistration() {
                     <option key={s}>{s}</option>
                   ))}
                 </SelectField>
+              </div>
+            </div>
+
+            <SectionHeading icon={USER_ICON} title="Parent Details" />
+
+            <div className="grid-2">
+              <div className="field-group">
+                <label>
+                  Father Name <span className="req">*</span>
+                </label>
+                <InputField
+                  name="fatherName"
+                  placeholder="Enter father name"
+                  value={formData.fatherName}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>
+                  Mother Name <span className="req">*</span>
+                </label>
+                <InputField
+                  name="motherName"
+                  placeholder="Enter mother name"
+                  value={formData.motherName}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field-group full-span">
+                <label>Parent Mobile Number</label>
+                <InputField
+                  icon={PHONE_ICON}
+                  name="parentMobileNumber"
+                  placeholder="Enter parent mobile number"
+                  value={formData.parentMobileNumber}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <SectionHeading icon={LOCATION_ICON} title="Address Information" />
+
+            <div className="grid-2">
+              <div className="field-group full-span">
+                <label>
+                  Address <span className="req">*</span>
+                </label>
+                <InputField
+                  name="address"
+                  placeholder="Enter address"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>
+                  City <span className="req">*</span>
+                </label>
+                <InputField
+                  name="addressCity"
+                  placeholder="Enter city"
+                  value={formData.addressCity}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>
+                  State <span className="req">*</span>
+                </label>
+                <SelectField
+                  name="addressState"
+                  value={formData.addressState}
+                  onChange={handleChange}
+                >
+                  <option value="">Select State</option>
+                  {indianStates.map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </SelectField>
+              </div>
+
+              <div className="field-group">
+                <label>
+                  Pincode <span className="req">*</span>
+                </label>
+                <InputField
+                  name="pincode"
+                  placeholder="Enter pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 

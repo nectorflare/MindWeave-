@@ -21,13 +21,17 @@ function StudentLogin() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
         },
-        body: JSON.stringify(loginData),
-      });
+      );
 
       const data = await response.json();
 
@@ -163,12 +167,6 @@ function StudentLogin() {
             <button className="login-btn" onClick={handleLogin}>
               Login
             </button>
-
-            <div className="divider">
-              <span>OR</span>
-            </div>
-
-            <button className="google-btn">Login with Google</button>
 
             <p className="register-link">
               Don't have an account?{" "}

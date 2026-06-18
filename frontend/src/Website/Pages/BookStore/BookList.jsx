@@ -83,6 +83,7 @@ const categories = [
 const classes = ["All", "1-2", "3-5", "6-8", "9-10", "11-12"];
 
 function BookList() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All Books");
   const [selectedClass, setSelectedClass] = useState("All");
   const [sortBy, setSortBy] = useState("popular");

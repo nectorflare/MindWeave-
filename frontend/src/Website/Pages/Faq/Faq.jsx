@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import "./Faq.css";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
 import { Link } from "react-router-dom";
 const categories = [
   { key: "all", emoji: "🏅", label: "All Questions", count: 24 },
@@ -119,94 +121,98 @@ export default function Faq() {
   };
 
   return (
-    <main className="faq__page">
-      {/* Hero */}
-      <section className="faq__hero">
-        <div className="faq__container faq__hero-wrap">
-          <div className="faq__hero-content">
-            <div className="faq__breadcrumb">
-              <Link to="/">Home</Link> &gt; FAQ
+    <>
+      <Navbar />
+      <main className="faq__page">
+        {/* Hero */}
+        <section className="faq__hero">
+          <div className="faq__container faq__hero-wrap">
+            <div className="faq__hero-content">
+              <div className="faq__breadcrumb">
+                <Link to="/">Home</Link> &gt; FAQ
+              </div>
+              <h1>
+                Frequently
+                <br />
+                Asked Questions
+              </h1>
+              <div className="faq__title-line" />
+              <p>
+                Find answers to the most common questions about our Olympiads,
+                programs, registration, and more.
+              </p>
+              <Link to="/contact-us" className="faq__hero-btn">
+                Contact Us
+              </Link>
             </div>
-            <h1>
-              Frequently
-              <br />
-              Asked Questions
-            </h1>
-            <div className="faq__title-line" />
-            <p>
-              Find answers to the most common questions about our Olympiads,
-              programs, registration, and more.
-            </p>
-            <Link to="/contact-us" className="faq__hero-btn">
-              Contact Us
-            </Link>
-          </div>
 
-          <div className="faq__hero-image">
-            <img src="images/faq-girl.png" alt="FAQ Student" />
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="faq__categories">
-        <div className="faq__container">
-          <span className="faq__section-label">EXPLORE FAQ TOPICS</span>
-          <h2>Browse By Category</h2>
-
-          <div className="faq__category-grid">
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                className={`faq__category-card${activeCategory === cat.key ? " active" : ""}`}
-                onClick={() => handleCategoryChange(cat.key)}
-              >
-                <span>{cat.emoji}</span>
-                <h4>{cat.label}</h4>
-                <p>({cat.count})</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Accordion */}
-      <section className="faq__list-section">
-        <div className="faq__container">
-          <span className="faq__section-label">ALL QUESTIONS</span>
-          <h2>Find Answers To Your Questions</h2>
-
-          <div className="faq__accordion">
-            {filtered.map((faq) => (
-              <FaqItem
-                key={faq.id}
-                faq={faq}
-                isOpen={openId === faq.id}
-                onToggle={() => handleToggle(faq.id)}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="faq__cta-section">
-        <div className="faq__container">
-          <div className="faq__cta">
-            <h2>Still Have Questions?</h2>
-            <p>
-              Our support team is here to help you with any queries you may
-              have.
-            </p>
-            <div className="faq__cta-actions">
-              <a href="tel:+911234567890">📞 +91 12345 67890</a>
-              <a href="mailto:info@mindweaverfoundation.org">
-                ✉ info@mindweaverfoundation.org
-              </a>
+            <div className="faq__hero-image">
+              <img src="images/faq-girl.png" alt="FAQ Student" />
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        {/* Categories */}
+        <section className="faq__categories">
+          <div className="faq__container">
+            <span className="faq__section-label">EXPLORE FAQ TOPICS</span>
+            <h2>Browse By Category</h2>
+
+            <div className="faq__category-grid">
+              {categories.map((cat) => (
+                <button
+                  key={cat.key}
+                  className={`faq__category-card${activeCategory === cat.key ? " active" : ""}`}
+                  onClick={() => handleCategoryChange(cat.key)}
+                >
+                  <span>{cat.emoji}</span>
+                  <h4>{cat.label}</h4>
+                  <p>({cat.count})</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Accordion */}
+        <section className="faq__list-section">
+          <div className="faq__container">
+            <span className="faq__section-label">ALL QUESTIONS</span>
+            <h2>Find Answers To Your Questions</h2>
+
+            <div className="faq__accordion">
+              {filtered.map((faq) => (
+                <FaqItem
+                  key={faq.id}
+                  faq={faq}
+                  isOpen={openId === faq.id}
+                  onToggle={() => handleToggle(faq.id)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="faq__cta-section">
+          <div className="faq__container">
+            <div className="faq__cta">
+              <h2>Still Have Questions?</h2>
+              <p>
+                Our support team is here to help you with any queries you may
+                have.
+              </p>
+              <div className="faq__cta-actions">
+                <a href="tel:+911234567890">📞 +91 12345 67890</a>
+                <a href="mailto:info@mindweaverfoundation.org">
+                  ✉ info@mindweaverfoundation.org
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

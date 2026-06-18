@@ -4,9 +4,6 @@ import "./AchieversGallery.css";
 import img1 from "../../../assets/gallery1.png";
 import img2 from "../../../assets/gallery2.png";
 import img3 from "../../../assets/gallery3.png";
-// import img4 from "../../assets/gallery4.jpg";
-// import img5 from "../../assets/gallery5.jpg";
-// import img6 from "../../assets/gallery6.jpg";
 
 const galleryData = [
   {

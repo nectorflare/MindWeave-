@@ -42,6 +42,9 @@ import BookList from "../Website/Pages/BookStore/BookList";
 import OlympiadDetails from "../Website/Pages/OlympiadDetails/OlympiadDetails";
 import Faq from "../Website/Pages/Faq/Faq";
 import BookDetails from "../Website/Pages/BookDetails/BookDetails";
+import StudentProfile from "../Website/Pages/StudentProfile/StudentProfile";
+import SchoolProfile from "../Website/Pages/SchoolProfile/SchoolProfile";
+
 function AppRoutes() {
   return (
     <Routes>
@@ -62,8 +65,10 @@ function AppRoutes() {
       <Route path="/olympiads-list" element={<OlympiadsList />} />
       <Route path="/books-store" element={<BookList />} />
       <Route path="/olympiads-details" element={<OlympiadDetails />} />
-      <Route path="/faq-page" element={<Faq />} />
+      <Route path="/faq" element={<Faq />} />
       <Route path="/book-details" element={<BookDetails />} />
+      <Route path="/student/my-profile" element={<StudentProfile />} />
+      <Route path="/school/my-profile" element={<SchoolProfile />} />
     </Routes>
   );
 }

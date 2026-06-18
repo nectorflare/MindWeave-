@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./BookDetails.css";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import Navbar from "../../Components/Navbar/Navbar";
 import bookImage from "../../../assets/book-image.jpg";
@@ -62,6 +63,7 @@ const reviews = [
 ];
 
 export default function BookDetails() {
+  const navigate = useNavigate();
   const [activeThumb, setActiveThumb] = useState(0);
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState("overview");
