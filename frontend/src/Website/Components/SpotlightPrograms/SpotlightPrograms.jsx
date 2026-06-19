@@ -1,6 +1,6 @@
 import React from "react";
 import "./SpotlightPrograms.css";
-
+import { Link } from "react-router-dom";
 const cards = [
   {
     icon: "💡",
@@ -52,9 +52,9 @@ const SpotlightPrograms = () => {
 
               <p>{card.description}</p>
 
-              <a href="/" className="learn-more">
+              <Link to="/" className="learn-more">
                 Learn More <span>→</span>
-              </a>
+              </Link>
             </div>
           ))}
         </div>

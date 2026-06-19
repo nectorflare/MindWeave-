@@ -16,6 +16,9 @@ export default defineConfig({
   build: {
     sourcemap: false,
   },
+  server: {
+    historyApiFallback: true, // ✅ Yeh line add karo
+  },
 
   preview: {
     port: 4173,

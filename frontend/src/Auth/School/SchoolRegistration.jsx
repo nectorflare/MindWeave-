@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./SchoolRegistration.css";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
 
@@ -859,13 +860,13 @@ export default function SchoolRegistration() {
               />
               <label htmlFor="agreeTerms" className="terms-label">
                 I agree to the{" "}
-                <a href="#" className="terms-link">
+                <Link to="/terms-and-conditions" className="terms-link">
                   Terms &amp; Conditions
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a href="#" className="terms-link">
+                <Link to="/privacy-policy" className="terms-link">
                   Privacy Policy
-                </a>{" "}
+                </Link>
                 <span className="req">*</span>
               </label>
             </div>
@@ -878,9 +879,9 @@ export default function SchoolRegistration() {
 
             <p className="login-link">
               Already have an account?{" "}
-              <a href="#" className="terms-link">
+              <Link to="/school-login" className="terms-link">
                 Login
-              </a>
+              </Link>
             </p>
           </div>
         </div>

@@ -195,12 +195,23 @@ export default function BookDetails() {
                 <span>ISCO</span>
               </div>
 
-              <a href="#" className="bd-outline-btn">
+              <button
+                className="bd-outline-btn"
+                onClick={() => window.open("/brochure.pdf", "_blank")}
+              >
                 Download Brochure
-              </a>
-              <a href="#" className="bd-outline-btn">
+              </button>
+              <button
+                className="bd-outline-btn"
+                onClick={() =>
+                  navigator.share({
+                    title: "ISCO Book",
+                    url: window.location.href,
+                  })
+                }
+              >
                 Share This Book
-              </a>
+              </button>
             </aside>
           </section>
 

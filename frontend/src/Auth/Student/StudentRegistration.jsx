@@ -843,13 +843,13 @@ export default function StudentRegistration() {
               />
               <label htmlFor="agreeTerms" className="terms-label">
                 I agree to the{" "}
-                <a href="#" className="terms-link">
+                <Link to="/terms-and-conditions" className="terms-link">
                   Terms &amp; Conditions
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a href="#" className="terms-link">
+                <Link to="/privacy-policy" className="terms-link">
                   Privacy Policy
-                </a>{" "}
+                </Link>
                 <span className="req">*</span>
               </label>
             </div>
