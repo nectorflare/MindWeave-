@@ -45,6 +45,7 @@ function Footer() {
           </div>
 
           {/* Contact */}
+
           <div className="footer-column">
             <h4>QUICK LINKS</h4>
 

@@ -91,22 +91,21 @@ const ContactUs = () => {
             </div>
             <h3>Call Us</h3>
             <p>
-              <a href="tel:+911234567890">+91 12345 67890</a>
+              <a href="tel:+919540008894">+91 95400 08894</a>
             </p>
             <small>Mon - Sat (9:00 AM - 6:00 PM)</small>
           </div>
 
           <div className="contact-card">
-            <div className="icon green">
-              <FaEnvelope />
+            <div className="icon yellow">
+              <FaMapMarkerAlt />
             </div>
-            <h3>Email Us</h3>
+            <h3>Our Office</h3>
             <p>
-              <a href="mailto:info@mindweaverfoundation.org">
-                info@mindweaverfoundation.org
-              </a>
+              Rohini Sector 21,
+              <br />
+              Delhi, India
             </p>
-            <small>We reply within 24 hours</small>
           </div>
 
           <div className="contact-card">
@@ -217,7 +216,7 @@ const ContactUs = () => {
 
             <iframe
               title="location"
-              src="https://www.google.com/maps?q=New+Delhi+India&output=embed"
+              src="https://www.google.com/maps?q=Rohini+Sector+21+Delhi&output=embed"
               allowFullScreen=""
               loading="lazy"
             ></iframe>

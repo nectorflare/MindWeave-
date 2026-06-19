@@ -292,6 +292,12 @@ export default function StudentRegistration() {
       return;
     }
 
+    if (["mobileNumber", "parentMobileNumber"].includes(name)) {
+      const numericValue = value.replace(/\D/g, "").slice(0, 10);
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -307,6 +313,10 @@ export default function StudentRegistration() {
     // ADD THIS BLOCK HERE
     if (!formData.emailId || !formData.mobileNumber || !formData.password) {
       alert("Please fill required fields (Email, Mobile, Password)");
+      return;
+    }
+    if (formData.mobileNumber.length !== 10) {
+      alert("Please enter a valid 10-digit mobile number");
       return;
     }
 
@@ -611,9 +621,11 @@ export default function StudentRegistration() {
                 <InputField
                   icon={PHONE_ICON}
                   name="mobileNumber"
-                  placeholder="Enter mobile number"
+                  placeholder="Enter 10-digit mobile number"
                   value={formData.mobileNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
                 />
               </div>
             </div>
@@ -715,9 +727,11 @@ export default function StudentRegistration() {
                 <InputField
                   icon={PHONE_ICON}
                   name="parentMobileNumber"
-                  placeholder="Enter parent mobile number"
+                  placeholder="Enter 10-digit mobile number"
                   value={formData.parentMobileNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
                 />
               </div>
             </div>

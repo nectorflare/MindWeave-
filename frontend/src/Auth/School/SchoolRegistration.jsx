@@ -307,6 +307,14 @@ export default function SchoolRegistration() {
       return;
     }
 
+    if (
+      ["principalMobileNumber", "mobileNumber", "whatsappNumber"].includes(name)
+    ) {
+      const numericValue = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, [name]: numericValue });
+      return;
+    }
+
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
@@ -323,6 +331,14 @@ export default function SchoolRegistration() {
     }
     if (!emailRegex.test(formData.emailId)) {
       alert("School Email is invalid");
+      return;
+    }
+    if (formData.principalMobileNumber.length !== 10) {
+      alert("Principal Mobile must be 10 digits");
+      return;
+    }
+    if (formData.mobileNumber.length !== 10) {
+      alert("Coordinator Mobile must be 10 digits");
       return;
     }
 
@@ -357,7 +373,7 @@ export default function SchoolRegistration() {
       <Navbar />
       <div className="page-bg">
         {/* Breadcrumb */}
-        {/* Breadcrumb */}
+
         <div className="breadcrumb">
           <span className="breadcrumb-home" onClick={() => navigate("/")}>
             Home
@@ -702,9 +718,11 @@ export default function SchoolRegistration() {
                 <InputField
                   icon={PHONE_ICON}
                   name="principalMobileNumber"
-                  placeholder="Enter mobile number"
+                  placeholder="Enter 10-digit mobile number"
                   value={formData.principalMobileNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
                 />
               </div>
               <div className="field-group full-span">
@@ -757,9 +775,11 @@ export default function SchoolRegistration() {
                 <InputField
                   icon={PHONE_ICON}
                   name="mobileNumber"
-                  placeholder="Enter mobile number"
+                  placeholder="Enter 10-digit mobile number"
                   value={formData.mobileNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
                 />
               </div>
               <div className="field-group">
@@ -767,9 +787,11 @@ export default function SchoolRegistration() {
                 <InputField
                   icon={WHATSAPP_ICON}
                   name="whatsappNumber"
-                  placeholder="Enter WhatsApp number"
+                  placeholder="Enter 10-digit WhatsApp number"
                   value={formData.whatsappNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={10}
                 />
               </div>
               <div className="field-group full-span">
