@@ -283,6 +283,25 @@ export default function StudentRegistration() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  // 👇 NEW: error states
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  // 👇 NEW: password validation function
+  const validatePassword = (password) => {
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter.";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter.";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number.";
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password))
+      return "Password must contain at least one special symbol.";
+    return "";
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -298,6 +317,27 @@ export default function StudentRegistration() {
       return;
     }
 
+    // 👇 NEW: live validation for password
+    if (name === "password") {
+      setFormData((prev) => ({ ...prev, password: value }));
+      setPasswordError(validatePassword(value));
+      if (formData.confirmPassword) {
+        setConfirmPasswordError(
+          value !== formData.confirmPassword ? "Passwords do not match." : "",
+        );
+      }
+      return;
+    }
+
+    // 👇 NEW: live validation for confirm password
+    if (name === "confirmPassword") {
+      setFormData((prev) => ({ ...prev, confirmPassword: value }));
+      setConfirmPasswordError(
+        value !== formData.password ? "Passwords do not match." : "",
+      );
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -310,7 +350,6 @@ export default function StudentRegistration() {
       return;
     }
 
-    // ADD THIS BLOCK HERE
     if (!formData.emailId || !formData.mobileNumber || !formData.password) {
       alert("Please fill required fields (Email, Mobile, Password)");
       return;
@@ -328,13 +367,10 @@ export default function StudentRegistration() {
     if (formData.dateOfBirth) {
       const dob = new Date(formData.dateOfBirth);
       const today = new Date();
-
       const minDate = new Date(today);
       minDate.setFullYear(today.getFullYear() - 50);
-
       const maxDate = new Date(today);
       maxDate.setFullYear(today.getFullYear() - 5);
-
       if (dob < minDate) {
         alert("Date of Birth cannot be more than 50 years ago");
         return;
@@ -344,8 +380,15 @@ export default function StudentRegistration() {
         return;
       }
     }
+
+    // 👇 NEW: password checks on submit
+    const passwordValidationError = validatePassword(formData.password);
+    if (passwordValidationError) {
+      alert(passwordValidationError);
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
-      alert("Password and Confirm Password must match.");
+      alert("Passwords do not match.");
       return;
     }
 
@@ -354,9 +397,7 @@ export default function StudentRegistration() {
         `${import.meta.env.VITE_API_URL}/api/iam/register-user`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         },
       );
@@ -374,6 +415,7 @@ export default function StudentRegistration() {
       alert("Server error. Please try again later.");
     }
   };
+
   return (
     <>
       <Navbar />
@@ -382,14 +424,11 @@ export default function StudentRegistration() {
         <Link to="/" className="breadcrumb-home">
           Home
         </Link>
-
         <span className="breadcrumb-sep">›</span>
-
         <span className="breadcrumb-current">Student Registration</span>
       </div>
-      <div className="page-bg">
-        {/* Breadcrumb */}
 
+      <div className="page-bg">
         {/* Page Title */}
         <div className="page-title-block">
           <h1 className="page-title">Student Registration</h1>
@@ -405,14 +444,12 @@ export default function StudentRegistration() {
           {/* LEFT SIDEBAR */}
           <aside className="sidebar">
             <div className="sidebar-illustration">
-              {/* Graduation cap SVG illustration */}
               <svg
                 viewBox="0 0 220 200"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className="grad-svg"
               >
-                {/* Books stack */}
                 <rect
                   x="40"
                   y="130"
@@ -439,7 +476,6 @@ export default function StudentRegistration() {
                   rx="4"
                   fill="#f59e0b"
                 />
-                {/* Pencil */}
                 <rect
                   x="155"
                   y="65"
@@ -454,7 +490,6 @@ export default function StudentRegistration() {
                   fill="#1e3a5f"
                   transform="rotate(-15 161 113)"
                 />
-                {/* Graduation Cap */}
                 <ellipse cx="110" cy="62" rx="52" ry="12" fill="#1e3a5f" />
                 <polygon points="110,30 162,62 110,74 58,62" fill="#172a45" />
                 <rect
@@ -474,7 +509,6 @@ export default function StudentRegistration() {
                   fill="#1e3a5f"
                 />
                 <circle cx="157" cy="84" r="6" fill="#f59e0b" />
-                {/* Tassel line */}
                 <line
                   x1="157"
                   y1="60"
@@ -532,7 +566,6 @@ export default function StudentRegistration() {
           <div className="form-card">
             {/* ── Personal Information ── */}
             <SectionHeading icon={USER_ICON} title="Personal Information" />
-
             <div className="grid-2">
               <div className="field-group">
                 <label>
@@ -546,7 +579,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="field-group">
                 <label>
                   Last Name <span className="req">*</span>
@@ -601,7 +633,6 @@ export default function StudentRegistration() {
                   <option>Other</option>
                 </SelectField>
               </div>
-
               <div className="field-group full-span">
                 <label>
                   Email Address <span className="req">*</span>
@@ -632,7 +663,6 @@ export default function StudentRegistration() {
 
             {/* ── Academic Information ── */}
             <SectionHeading icon={ACADEMIC_ICON} title="Academic Information" />
-
             <div className="grid-2">
               <div className="field-group">
                 <label>
@@ -648,10 +678,7 @@ export default function StudentRegistration() {
                     <option key={g} value={g}>
                       {g}
                     </option>
-                  ))}{" "}
-                  {/* {grades.map((g) => (
-                    <option key={g}>{g}</option>
-                  ))} */}
+                  ))}
                 </SelectField>
               </div>
               <div className="field-group">
@@ -695,8 +722,8 @@ export default function StudentRegistration() {
               </div>
             </div>
 
+            {/* ── Parent Details ── */}
             <SectionHeading icon={USER_ICON} title="Parent Details" />
-
             <div className="grid-2">
               <div className="field-group">
                 <label>
@@ -709,7 +736,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="field-group">
                 <label>
                   Mother Name <span className="req">*</span>
@@ -721,7 +747,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="field-group full-span">
                 <label>Parent Mobile Number</label>
                 <InputField
@@ -736,8 +761,8 @@ export default function StudentRegistration() {
               </div>
             </div>
 
+            {/* ── Address Information ── */}
             <SectionHeading icon={LOCATION_ICON} title="Address Information" />
-
             <div className="grid-2">
               <div className="field-group full-span">
                 <label>
@@ -750,7 +775,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="field-group">
                 <label>
                   City <span className="req">*</span>
@@ -762,7 +786,6 @@ export default function StudentRegistration() {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="field-group">
                 <label>
                   State <span className="req">*</span>
@@ -778,7 +801,6 @@ export default function StudentRegistration() {
                   ))}
                 </SelectField>
               </div>
-
               <div className="field-group">
                 <label>
                   Pincode <span className="req">*</span>
@@ -796,8 +818,8 @@ export default function StudentRegistration() {
 
             {/* ── Account Information ── */}
             <SectionHeading icon={LOCK_ICON} title="Account Information" />
-
             <div className="grid-2">
+              {/* Password Field */}
               <div className="field-group">
                 <label>
                   Password <span className="req">*</span>
@@ -820,7 +842,21 @@ export default function StudentRegistration() {
                     {showPass ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
+                {/* 👇 NEW: live password error */}
+                {passwordError && (
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "0.78rem",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {passwordError}
+                  </p>
+                )}
               </div>
+
+              {/* Confirm Password Field */}
               <div className="field-group">
                 <label>
                   Confirm Password <span className="req">*</span>
@@ -843,6 +879,18 @@ export default function StudentRegistration() {
                     {showConfirm ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
+                {/* 👇 NEW: live confirm password error */}
+                {confirmPasswordError && (
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "0.78rem",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
             </div>
 

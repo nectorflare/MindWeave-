@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
 
-// ── Icons ──
+// ── Icons ── (same as before, no changes)
 const SCHOOL_ICON = (
   <svg
     width="16"
@@ -263,6 +263,7 @@ function SectionHeading({ icon, title }) {
 // ── Main Component ──
 export default function SchoolRegistration() {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     schoolName: "",
     schoolType: "",
@@ -294,10 +295,25 @@ export default function SchoolRegistration() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-  // };
+  // 👇 NEW: error states for live validation
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  // 👇 NEW: password validation function
+  const validatePassword = (password) => {
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter.";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter.";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number.";
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password))
+      return "Password must contain at least one special symbol.";
+    return "";
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -312,6 +328,28 @@ export default function SchoolRegistration() {
     ) {
       const numericValue = value.replace(/\D/g, "").slice(0, 10);
       setFormData({ ...formData, [name]: numericValue });
+      return;
+    }
+
+    // 👇 NEW: live validation for password field
+    if (name === "password") {
+      setFormData({ ...formData, password: value });
+      setPasswordError(validatePassword(value));
+      // also re-check confirm password if already typed
+      if (formData.confirmPassword) {
+        setConfirmPasswordError(
+          value !== formData.confirmPassword ? "Passwords do not match." : "",
+        );
+      }
+      return;
+    }
+
+    // 👇 NEW: live validation for confirm password field
+    if (name === "confirmPassword") {
+      setFormData({ ...formData, confirmPassword: value });
+      setConfirmPasswordError(
+        value !== formData.password ? "Passwords do not match." : "",
+      );
       return;
     }
 
@@ -342,14 +380,23 @@ export default function SchoolRegistration() {
       return;
     }
 
+    // 👇 NEW: password checks on submit
+    const passwordValidationError = validatePassword(formData.password);
+    if (passwordValidationError) {
+      alert(passwordValidationError);
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/iam/register-school`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         },
       );
@@ -373,7 +420,6 @@ export default function SchoolRegistration() {
       <Navbar />
       <div className="page-bg">
         {/* Breadcrumb */}
-
         <div className="breadcrumb">
           <span className="breadcrumb-home" onClick={() => navigate("/")}>
             Home
@@ -411,7 +457,6 @@ export default function SchoolRegistration() {
                 xmlns="http://www.w3.org/2000/svg"
                 className="grad-svg"
               >
-                {/* Building base */}
                 <rect
                   x="35"
                   y="100"
@@ -421,9 +466,7 @@ export default function SchoolRegistration() {
                   fill="#1e3a5f"
                   opacity="0.85"
                 />
-                {/* Roof / Triangle */}
                 <polygon points="110,30 20,100 200,100" fill="#172a45" />
-                {/* Door */}
                 <rect
                   x="92"
                   y="138"
@@ -432,7 +475,6 @@ export default function SchoolRegistration() {
                   rx="3"
                   fill="#f59e0b"
                 />
-                {/* Windows */}
                 <rect
                   x="48"
                   y="112"
@@ -451,7 +493,6 @@ export default function SchoolRegistration() {
                   fill="#f0f4f8"
                   opacity="0.7"
                 />
-                {/* Flag pole */}
                 <line
                   x1="110"
                   y1="30"
@@ -461,7 +502,6 @@ export default function SchoolRegistration() {
                   strokeWidth="2"
                 />
                 <polygon points="110,10 130,18 110,26" fill="#f59e0b" />
-                {/* Steps */}
                 <rect
                   x="80"
                   y="178"
@@ -668,12 +708,6 @@ export default function SchoolRegistration() {
                 <label>
                   Pincode <span className="req">*</span>
                 </label>
-                {/* <InputField
-                  name="pincode"
-                  placeholder="Enter pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                /> */}
                 <InputField
                   name="pincode"
                   placeholder="Enter 6-digit pincode"
@@ -823,6 +857,8 @@ export default function SchoolRegistration() {
                   onChange={handleChange}
                 />
               </div>
+
+              {/* Password Field */}
               <div className="field-group">
                 <label>
                   Password <span className="req">*</span>
@@ -845,7 +881,21 @@ export default function SchoolRegistration() {
                     {showPass ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
+                {/* 👇 NEW: live password error */}
+                {passwordError && (
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "0.78rem",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {passwordError}
+                  </p>
+                )}
               </div>
+
+              {/* Confirm Password Field */}
               <div className="field-group">
                 <label>
                   Confirm Password <span className="req">*</span>
@@ -868,6 +918,18 @@ export default function SchoolRegistration() {
                     {showConfirm ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
+                {/* 👇 NEW: live confirm password error */}
+                {confirmPasswordError && (
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "0.78rem",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
             </div>
 
