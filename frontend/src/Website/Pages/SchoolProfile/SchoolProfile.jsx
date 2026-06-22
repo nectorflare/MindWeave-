@@ -3,6 +3,7 @@ import "./SchoolProfile.css";
 import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import EditSchoolProfile from "../EditSchoolProfile/EditSchoolProfile";
 
 const initialProfileData = {
@@ -216,10 +217,8 @@ export default function SchoolProfile() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">School Profile</span>
+        <span className="breadcrumb-current">School Profile</span>
       </div>
       <div className="sp-root">
         <div className="sp-layout">

@@ -20,6 +20,22 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+.terms-hero-overlay {
+  min-height: 500px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  padding: 60px 80px;
+}
+
+.terms-hero-content {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .terms-hero {
   min-height: 500px;
   background: url("../../../assets/privacy-lock.jpg");
@@ -73,7 +89,8 @@
   padding: 12px 24px;
   background: #e8bb67;
   color: #011940;
-
+  align-self: flex-start;
+  width: fit-content;
   border-radius: 8px;
   font-weight: 600;
   transition: 0.3s;

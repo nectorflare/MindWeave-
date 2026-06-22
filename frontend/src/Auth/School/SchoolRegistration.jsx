@@ -6,7 +6,6 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
 
-// ── Icons ── (same as before, no changes)
 const SCHOOL_ICON = (
   <svg
     width="16"
@@ -207,7 +206,6 @@ const schoolTypes = [
 ];
 const boards = ["CBSE", "ICSE", "State Board", "IB", "IGCSE", "Other"];
 
-// ── Reusable Components ──
 function InputField({
   icon,
   name,
@@ -260,7 +258,14 @@ function SectionHeading({ icon, title }) {
   );
 }
 
-// ── Main Component ──
+// ── Error message component ──
+function FieldError({ msg }) {
+  if (!msg) return null;
+  return (
+    <p style={{ color: "red", fontSize: "0.78rem", marginTop: "4px" }}>{msg}</p>
+  );
+}
+
 export default function SchoolRegistration() {
   const navigate = useNavigate();
 
@@ -294,12 +299,9 @@ export default function SchoolRegistration() {
 
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  // 👇 NEW: error states for live validation
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-  // 👇 NEW: password validation function
   const validatePassword = (password) => {
     if (password.length < 8)
       return "Password must be at least 8 characters long.";
@@ -317,12 +319,20 @@ export default function SchoolRegistration() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    // ── Pincode: only digits, max 6 ──
     if (name === "pincode") {
       const numericValue = value.replace(/\D/g, "").slice(0, 6);
       setFormData({ ...formData, pincode: numericValue });
       return;
     }
 
+    if (name === "affiliationNumber") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 7);
+      setFormData({ ...formData, affiliationNumber: numericValue });
+      return;
+    }
+
+    // ── Phone numbers: only digits, max 10 ──
     if (
       ["principalMobileNumber", "mobileNumber", "whatsappNumber"].includes(name)
     ) {
@@ -331,11 +341,39 @@ export default function SchoolRegistration() {
       return;
     }
 
-    // 👇 NEW: live validation for password field
+    // ── UDISE Code: only digits, max 11 ──
+    if (name === "udiseCode") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 11);
+      setFormData({ ...formData, udiseCode: numericValue });
+      return;
+    }
+
+    // ── Established Year: only digits, max 4 ──
+    if (name === "establishedYear") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 4);
+      setFormData({ ...formData, establishedYear: numericValue });
+      return;
+    }
+
+    // ── Name fields: no digits allowed ──
+    const nameFields = [
+      "schoolName",
+      "principalName",
+      "olympiadCoordinatorName",
+      "designation",
+      "city",
+      "district",
+    ];
+    if (nameFields.includes(name)) {
+      const filtered = value.replace(/[0-9]/g, "");
+      setFormData({ ...formData, [name]: filtered });
+      return;
+    }
+
+    // ── Password: live validation ──
     if (name === "password") {
       setFormData({ ...formData, password: value });
       setPasswordError(validatePassword(value));
-      // also re-check confirm password if already typed
       if (formData.confirmPassword) {
         setConfirmPasswordError(
           value !== formData.confirmPassword ? "Passwords do not match." : "",
@@ -344,7 +382,7 @@ export default function SchoolRegistration() {
       return;
     }
 
-    // 👇 NEW: live validation for confirm password field
+    // ── Confirm Password: live validation ──
     if (name === "confirmPassword") {
       setFormData({ ...formData, confirmPassword: value });
       setConfirmPasswordError(
@@ -359,28 +397,105 @@ export default function SchoolRegistration() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 
   const handleSubmit = async () => {
-    if (!emailRegex.test(formData.principalEmailId)) {
-      alert("Principal Email is invalid");
+    // ── Required field checks ──
+    if (!formData.schoolName.trim()) {
+      alert("School Name is required");
       return;
     }
-    if (!emailRegex.test(formData.coordinatorEmailId)) {
-      alert("Coordinator Email is invalid");
+    if (!formData.schoolType) {
+      alert("Please select School Type");
       return;
     }
-    if (!emailRegex.test(formData.emailId)) {
-      alert("School Email is invalid");
+    if (!formData.boardName) {
+      alert("Please select Board Name");
+      return;
+    }
+    if (!formData.addressLine1.trim()) {
+      alert("Address Line 1 is required");
+      return;
+    }
+    if (!formData.city.trim()) {
+      alert("City is required");
+      return;
+    }
+    if (!formData.district.trim()) {
+      alert("District is required");
+      return;
+    }
+    if (!formData.state) {
+      alert("Please select State");
+      return;
+    }
+
+    // ── Pincode: must be exactly 6 digits ──
+    if (formData.pincode.length !== 6) {
+      alert("Pincode must be exactly 6 digits");
+      return;
+    }
+
+    // ── UDISE Code: if filled, must be 11 digits ──
+    if (formData.udiseCode && formData.udiseCode.length !== 11) {
+      alert("UDISE Code must be exactly 11 digits");
+      return;
+    }
+
+    // ── Established Year: if filled, must be valid ──
+    if (formData.establishedYear) {
+      const yr = parseInt(formData.establishedYear);
+      if (
+        formData.establishedYear.length !== 4 ||
+        yr < 1800 ||
+        yr > new Date().getFullYear()
+      ) {
+        alert(
+          `Established Year must be between 1800 and ${new Date().getFullYear()}`,
+        );
+        return;
+      }
+    }
+
+    // ── Principal checks ──
+    if (!formData.principalName.trim()) {
+      alert("Principal Name is required");
       return;
     }
     if (formData.principalMobileNumber.length !== 10) {
       alert("Principal Mobile must be 10 digits");
       return;
     }
+    if (!emailRegex.test(formData.principalEmailId)) {
+      alert("Principal Email is invalid");
+      return;
+    }
+
+    // ── Coordinator checks ──
+    if (!formData.olympiadCoordinatorName.trim()) {
+      alert("Coordinator Name is required");
+      return;
+    }
+    if (!formData.designation.trim()) {
+      alert("Designation is required");
+      return;
+    }
     if (formData.mobileNumber.length !== 10) {
       alert("Coordinator Mobile must be 10 digits");
       return;
     }
+    // WhatsApp is optional — but if filled, must be 10 digits
+    if (formData.whatsappNumber && formData.whatsappNumber.length !== 10) {
+      alert("WhatsApp Number must be 10 digits");
+      return;
+    }
+    if (!emailRegex.test(formData.coordinatorEmailId)) {
+      alert("Coordinator Email is invalid");
+      return;
+    }
 
-    // 👇 NEW: password checks on submit
+    // ── Login credentials ──
+    if (!emailRegex.test(formData.emailId)) {
+      alert("School Email is invalid");
+      return;
+    }
     const passwordValidationError = validatePassword(formData.password);
     if (passwordValidationError) {
       alert(passwordValidationError);
@@ -388,6 +503,12 @@ export default function SchoolRegistration() {
     }
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
+      return;
+    }
+
+    // ── Terms must be accepted ──
+    if (!formData.agreeTerms) {
+      alert("Please accept the Terms & Conditions and Privacy Policy");
       return;
     }
 
@@ -419,7 +540,6 @@ export default function SchoolRegistration() {
     <>
       <Navbar />
       <div className="page-bg">
-        {/* Breadcrumb */}
         <div className="breadcrumb">
           <span className="breadcrumb-home" onClick={() => navigate("/")}>
             Home
@@ -435,7 +555,6 @@ export default function SchoolRegistration() {
           <span className="breadcrumb-current">School Registration</span>
         </div>
 
-        {/* Page Title */}
         <div className="page-title-block">
           <h1 className="page-title">School Registration</h1>
           <div className="title-divider">
@@ -616,18 +735,27 @@ export default function SchoolRegistration() {
                 <label>Affiliation Number</label>
                 <InputField
                   name="affiliationNumber"
-                  placeholder="Enter affiliation number"
+                  placeholder="Enter 7-digit affiliation number"
                   value={formData.affiliationNumber}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={7}
                 />
               </div>
               <div className="field-group">
-                <label>UDISE Code</label>
+                <label>
+                  UDISE Code{" "}
+                  <span style={{ fontSize: "0.75rem", color: "#888" }}>
+                    (11 digits)
+                  </span>
+                </label>
                 <InputField
                   name="udiseCode"
-                  placeholder="Enter UDISE code"
+                  placeholder="Enter 11-digit UDISE code"
                   value={formData.udiseCode}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={11}
                 />
               </div>
               <div className="field-group">
@@ -637,6 +765,8 @@ export default function SchoolRegistration() {
                   placeholder="e.g. 1995"
                   value={formData.establishedYear}
                   onChange={handleChange}
+                  inputMode="numeric"
+                  maxLength={4}
                 />
               </div>
             </div>
@@ -817,7 +947,12 @@ export default function SchoolRegistration() {
                 />
               </div>
               <div className="field-group">
-                <label>WhatsApp Number</label>
+                <label>
+                  WhatsApp Number{" "}
+                  <span style={{ fontSize: "0.75rem", color: "#888" }}>
+                    (optional)
+                  </span>
+                </label>
                 <InputField
                   icon={WHATSAPP_ICON}
                   name="whatsappNumber"
@@ -858,7 +993,6 @@ export default function SchoolRegistration() {
                 />
               </div>
 
-              {/* Password Field */}
               <div className="field-group">
                 <label>
                   Password <span className="req">*</span>
@@ -881,21 +1015,9 @@ export default function SchoolRegistration() {
                     {showPass ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
-                {/* 👇 NEW: live password error */}
-                {passwordError && (
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "0.78rem",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {passwordError}
-                  </p>
-                )}
+                <FieldError msg={passwordError} />
               </div>
 
-              {/* Confirm Password Field */}
               <div className="field-group">
                 <label>
                   Confirm Password <span className="req">*</span>
@@ -918,18 +1040,7 @@ export default function SchoolRegistration() {
                     {showConfirm ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
-                {/* 👇 NEW: live confirm password error */}
-                {confirmPasswordError && (
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "0.78rem",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {confirmPasswordError}
-                  </p>
-                )}
+                <FieldError msg={confirmPasswordError} />
               </div>
             </div>
 

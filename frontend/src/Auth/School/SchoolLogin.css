@@ -6,27 +6,38 @@
   padding: 10px 40px;
   font-size: 14px;
   color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .breadcrumb span {
   cursor: pointer;
-  color: #007bff;
+  color: #64748b;
+  transition: 0.3s;
+}
+
+.breadcrumb span {
+  cursor: pointer;
+  color: #64748b; /* Home — gray */
+  transition: 0.3s;
 }
 
 .breadcrumb span:hover {
+  color: #1e3a5f;
   text-decoration: underline;
 }
 
 .breadcrumb .separator {
   margin: 0 6px;
-  color: #999;
+  color: #94a3b8;
   cursor: default;
 }
 
 .breadcrumb .active {
-  color: #333;
+  color: #f59e0b; /* Current page — yellow */
   cursor: default;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .login-wrapper {

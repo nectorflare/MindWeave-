@@ -256,6 +256,14 @@ function SectionHeading({ icon, title }) {
   );
 }
 
+// ── Reusable error message ──
+function FieldError({ msg }) {
+  if (!msg) return null;
+  return (
+    <p style={{ color: "red", fontSize: "0.78rem", marginTop: "4px" }}>{msg}</p>
+  );
+}
+
 export default function StudentRegistration() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -282,12 +290,9 @@ export default function StudentRegistration() {
 
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  // 👇 NEW: error states
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-  // 👇 NEW: password validation function
   const validatePassword = (password) => {
     if (password.length < 8)
       return "Password must be at least 8 characters long.";
@@ -305,19 +310,40 @@ export default function StudentRegistration() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    // ── Pincode: only digits, max 6 ──
     if (name === "pincode") {
-      const numericValue = value.replace(/\D/g, "").slice(0, 6);
-      setFormData((prev) => ({ ...prev, pincode: numericValue }));
+      setFormData((prev) => ({
+        ...prev,
+        pincode: value.replace(/\D/g, "").slice(0, 6),
+      }));
       return;
     }
 
+    // ── Phone numbers: only digits, max 10 ──
     if (["mobileNumber", "parentMobileNumber"].includes(name)) {
-      const numericValue = value.replace(/\D/g, "").slice(0, 10);
-      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value.replace(/\D/g, "").slice(0, 10),
+      }));
       return;
     }
 
-    // 👇 NEW: live validation for password
+    // ── Name fields: no digits allowed ──
+    const nameOnlyFields = [
+      "firstName",
+      "lastName",
+      "fatherName",
+      "motherName",
+      "schoolName",
+      "city",
+      "addressCity",
+    ];
+    if (nameOnlyFields.includes(name)) {
+      setFormData((prev) => ({ ...prev, [name]: value.replace(/[0-9]/g, "") }));
+      return;
+    }
+
+    // ── Password: live validation ──
     if (name === "password") {
       setFormData((prev) => ({ ...prev, password: value }));
       setPasswordError(validatePassword(value));
@@ -329,7 +355,7 @@ export default function StudentRegistration() {
       return;
     }
 
-    // 👇 NEW: live validation for confirm password
+    // ── Confirm Password: live validation ──
     if (name === "confirmPassword") {
       setFormData((prev) => ({ ...prev, confirmPassword: value }));
       setConfirmPasswordError(
@@ -344,44 +370,107 @@ export default function StudentRegistration() {
     }));
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
   const handleSubmit = async () => {
-    if (!formData.agreeTerms) {
-      alert("Please agree to Terms & Conditions and Privacy Policy.");
+    // ── Personal Information ──
+    if (!formData.firstName.trim()) {
+      alert("First Name is required");
+      return;
+    }
+    if (!formData.lastName.trim()) {
+      alert("Last Name is required");
+      return;
+    }
+    if (!formData.gender) {
+      alert("Please select Gender");
+      return;
+    }
+    if (!formData.dateOfBirth) {
+      alert("Date of Birth is required");
       return;
     }
 
-    if (!formData.emailId || !formData.mobileNumber || !formData.password) {
-      alert("Please fill required fields (Email, Mobile, Password)");
+    // Date of Birth range check
+    const dob = new Date(formData.dateOfBirth);
+    const today = new Date();
+    const minDate = new Date(today);
+    minDate.setFullYear(today.getFullYear() - 50);
+    const maxDate = new Date(today);
+    maxDate.setFullYear(today.getFullYear() - 5);
+    if (dob < minDate) {
+      alert("Date of Birth cannot be more than 50 years ago");
       return;
     }
-    if (formData.mobileNumber.length !== 10) {
-      alert("Please enter a valid 10-digit mobile number");
+    if (dob > maxDate) {
+      alert("Student must be at least 5 years old");
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.emailId)) {
       alert("Please enter a valid email address");
       return;
     }
-    if (formData.dateOfBirth) {
-      const dob = new Date(formData.dateOfBirth);
-      const today = new Date();
-      const minDate = new Date(today);
-      minDate.setFullYear(today.getFullYear() - 50);
-      const maxDate = new Date(today);
-      maxDate.setFullYear(today.getFullYear() - 5);
-      if (dob < minDate) {
-        alert("Date of Birth cannot be more than 50 years ago");
-        return;
-      }
-      if (dob > maxDate) {
-        alert("Student must be at least 5 years old");
-        return;
-      }
+    if (formData.mobileNumber.length !== 10) {
+      alert("Mobile Number must be 10 digits");
+      return;
     }
 
-    // 👇 NEW: password checks on submit
+    // ── Academic Information ──
+    if (!formData.classGrade) {
+      alert("Please select Class / Grade");
+      return;
+    }
+    if (!formData.schoolName.trim()) {
+      alert("School Name is required");
+      return;
+    }
+    if (!formData.city.trim()) {
+      alert("School City is required");
+      return;
+    }
+    if (!formData.state) {
+      alert("Please select School State");
+      return;
+    }
+
+    // ── Parent Details ──
+    if (!formData.fatherName.trim()) {
+      alert("Father Name is required");
+      return;
+    }
+    if (!formData.motherName.trim()) {
+      alert("Mother Name is required");
+      return;
+    }
+    // Parent mobile: optional, but if filled must be 10 digits
+    if (
+      formData.parentMobileNumber &&
+      formData.parentMobileNumber.length !== 10
+    ) {
+      alert("Parent Mobile Number must be 10 digits");
+      return;
+    }
+
+    // ── Address Information ──
+    if (!formData.address.trim()) {
+      alert("Address is required");
+      return;
+    }
+    if (!formData.addressCity.trim()) {
+      alert("Address City is required");
+      return;
+    }
+    if (!formData.addressState) {
+      alert("Please select Address State");
+      return;
+    }
+    if (formData.pincode.length !== 6) {
+      alert("Pincode must be exactly 6 digits");
+      return;
+    }
+
+    // ── Account Information ──
     const passwordValidationError = validatePassword(formData.password);
     if (passwordValidationError) {
       alert(passwordValidationError);
@@ -389,6 +478,12 @@ export default function StudentRegistration() {
     }
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
+      return;
+    }
+
+    // ── Terms ──
+    if (!formData.agreeTerms) {
+      alert("Please accept the Terms & Conditions and Privacy Policy");
       return;
     }
 
@@ -429,7 +524,6 @@ export default function StudentRegistration() {
       </div>
 
       <div className="page-bg">
-        {/* Page Title */}
         <div className="page-title-block">
           <h1 className="page-title">Student Registration</h1>
           <div className="title-divider">
@@ -599,7 +693,6 @@ export default function StudentRegistration() {
                   icon={CALENDAR_ICON}
                   name="dateOfBirth"
                   type="date"
-                  placeholder="DD / MM / YYYY"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
                   min={
@@ -748,7 +841,12 @@ export default function StudentRegistration() {
                 />
               </div>
               <div className="field-group full-span">
-                <label>Parent Mobile Number</label>
+                <label>
+                  Parent Mobile Number{" "}
+                  <span style={{ fontSize: "0.75rem", color: "#888" }}>
+                    (optional)
+                  </span>
+                </label>
                 <InputField
                   icon={PHONE_ICON}
                   name="parentMobileNumber"
@@ -770,7 +868,7 @@ export default function StudentRegistration() {
                 </label>
                 <InputField
                   name="address"
-                  placeholder="Enter address"
+                  placeholder="Enter full address"
                   value={formData.address}
                   onChange={handleChange}
                 />
@@ -819,7 +917,6 @@ export default function StudentRegistration() {
             {/* ── Account Information ── */}
             <SectionHeading icon={LOCK_ICON} title="Account Information" />
             <div className="grid-2">
-              {/* Password Field */}
               <div className="field-group">
                 <label>
                   Password <span className="req">*</span>
@@ -842,21 +939,9 @@ export default function StudentRegistration() {
                     {showPass ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
-                {/* 👇 NEW: live password error */}
-                {passwordError && (
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "0.78rem",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {passwordError}
-                  </p>
-                )}
+                <FieldError msg={passwordError} />
               </div>
 
-              {/* Confirm Password Field */}
               <div className="field-group">
                 <label>
                   Confirm Password <span className="req">*</span>
@@ -879,18 +964,7 @@ export default function StudentRegistration() {
                     {showConfirm ? EYE_OFF_ICON : EYE_ICON}
                   </button>
                 </div>
-                {/* 👇 NEW: live confirm password error */}
-                {confirmPasswordError && (
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "0.78rem",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {confirmPasswordError}
-                  </p>
-                )}
+                <FieldError msg={confirmPasswordError} />
               </div>
             </div>
 

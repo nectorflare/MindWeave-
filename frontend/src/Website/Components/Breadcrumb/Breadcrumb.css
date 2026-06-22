@@ -1,0 +1,132 @@
+/* .breadcrumb {
+  padding: 10px 40px;
+  font-size: 14px;
+  background-color: #f8f8f8;
+}
+
+.breadcrumb-link {
+  cursor: pointer;
+  color: #f59e0b;
+  text-decoration: none;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  margin: 0 6px;
+  color: #999;
+}
+
+.breadcrumb-current {
+  color: #6b7280;
+  font-weight: 600;
+} */
+
+/* Breadcrumb.css */
+.breadcrumb {
+  padding: 10px 40px;
+  font-size: 14px;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  /* overflow: hidden; */
+  white-space: nowrap;
+}
+
+.breadcrumb-link {
+  cursor: pointer;
+  color: #f59e0b;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  margin: 0 6px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.breadcrumb-current {
+  color: #6b7280;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    padding: 10px 16px;
+    position: relative;
+  }
+
+  .breadcrumb-middle {
+    display: none;
+  }
+
+  .breadcrumb-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #6b7280;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  /* .breadcrumb-ellipsis:hover .breadcrumb-tooltip {
+    display: flex;
+  } */
+
+  .breadcrumb-tooltip {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 6px;
+    z-index: 9999;
+    white-space: nowrap;
+    min-width: 180px;
+    display: flex;
+    overflow: visible;
+  }
+
+  .breadcrumb-tooltip a,
+  .breadcrumb-tooltip span {
+    font-size: 13px;
+    color: #f59e0b;
+    text-decoration: none;
+  }
+
+  .breadcrumb-tooltip a:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (min-width: 769px) {
+  .breadcrumb-ellipsis {
+    display: none;
+  }
+
+  .breadcrumb-middle {
+    display: inline-flex;
+    align-items: center;
+  }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./TermsConditions.css";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import { Link } from "react-router-dom";
 import {
   FiCheckCircle,
@@ -125,14 +126,12 @@ function TermsConditions() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">My Profile</span>
+        <span className="breadcrumb-current">Terms & Conditions</span>
       </div>
       {/* HERO */}
       <section className="terms-hero">
-        <div className="hero-overlay">
+        <div className="terms-hero-overlay">
           <div className="terms-hero-content">
             <h1>Terms & Conditions</h1>
 

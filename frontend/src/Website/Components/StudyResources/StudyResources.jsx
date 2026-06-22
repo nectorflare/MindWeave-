@@ -1,5 +1,5 @@
 import "./StudyResources.css";
-
+import { useNavigate } from "react-router-dom";
 const books = [
   {
     id: 1,
@@ -36,6 +36,7 @@ const books = [
 ];
 
 export default function StudyResources() {
+  const navigate = useNavigate();
   return (
     <section className="study-section">
       <div className="study-container">
@@ -70,7 +71,7 @@ export default function StudyResources() {
                 <p className="description">{book.description}</p>
 
                 <div className="btn-group">
-                  <button className="download-btn">Buy Now</button>
+                  <button className="buy-now-btn">Buy Now</button>
 
                   <button className="preview-btn">👁 Preview</button>
                 </div>
@@ -79,7 +80,12 @@ export default function StudyResources() {
           ))}
         </div>
 
-        <button className="view-all-btn">📚 View All Study Materials →</button>
+        <button
+          className="view-all-btn"
+          onClick={() => navigate("/books-store")}
+        >
+          📚 View All Study Materials →
+        </button>
       </div>
     </section>
   );

@@ -102,6 +102,12 @@
   line-height: 1.7;
 }
 
+.contact-card a {
+  color: #5c6782;
+  line-height: 1.7;
+  text-decoration: none;
+}
+
 .contact-card small {
   color: #7f8799;
 }

@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import "./BookList.css";
+
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import banner from "../../../assets/book-banner.jpg";
@@ -127,10 +129,8 @@ function BookList() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">Books Store</span>
+        <span className="breadcrumb-current">Books Store</span>
       </div>
       <div className="book-page">
         <div className="hero-banner">

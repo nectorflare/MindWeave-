@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./BookDetails.css";
 import { Link, useNavigate } from "react-router-dom";
 
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import Footer from "../../Components/Footer/Footer";
 import Navbar from "../../Components/Navbar/Navbar";
 import bookImage from "../../../assets/book-image.jpg";
@@ -69,7 +70,7 @@ export default function BookDetails() {
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState("overview");
   const [toast, setToast] = useState({ show: false, message: "" });
-
+  const [showTooltip, setShowTooltip] = useState(false);
   const mainImgSrc = thumbImages[activeThumb];
 
   const handleAddToCart = () => {
@@ -81,25 +82,42 @@ export default function BookDetails() {
     <>
       <Navbar />
       <div className="breadcrumb">
-        <Link to="/" className="bd-breadcrumb-link">
+        <Link to="/" className="breadcrumb-link">
           Home
         </Link>
+        <span className="breadcrumb-separator">›</span>
 
-        <span className="bd-breadcrumb-separator">›</span>
+        <span
+          className="breadcrumb-ellipsis"
+          onClick={() => setShowTooltip(!showTooltip)}
+        >
+          ...
+          {showTooltip && (
+            <div className="breadcrumb-tooltip">
+              <Link to="/books-store" onClick={() => setShowTooltip(false)}>
+                Books Store
+              </Link>
+              <Link to="/olympiad-books" onClick={() => setShowTooltip(false)}>
+                Olympiad Books
+              </Link>
+            </div>
+          )}
+        </span>
 
-        <Link to="/books-store" className="bd-breadcrumb-link">
-          Books Store
-        </Link>
+        <span className="breadcrumb-separator">›</span>
 
-        <span className="bd-breadcrumb-separator">›</span>
+        <span className="breadcrumb-middle">
+          <Link to="/books-store" className="breadcrumb-link">
+            Books Store
+          </Link>
+          <span className="breadcrumb-separator">›</span>
+          <Link to="/book-details" className="breadcrumb-link">
+            Book Details
+          </Link>
+          <span className="breadcrumb-separator">›</span>
+        </span>
 
-        <Link to="/olympiad-books" className="bd-breadcrumb-link">
-          Olympiad Books
-        </Link>
-
-        <span className="bd-breadcrumb-separator">›</span>
-
-        <span className="bd-breadcrumb-active">
+        <span className="breadcrumb-current">
           International Science Olympiad
         </span>
       </div>

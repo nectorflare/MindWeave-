@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./ContactUs.css";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import contactIllustration from "../../../assets/email-phone.png";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
@@ -26,16 +27,30 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.fullName.trim()) {
+      alert("Please enter your full name");
+      return;
+    }
+
+    if (!/^[a-zA-Z\s]+$/.test(formData.fullName)) {
+      alert("Name should contain only letters");
+      return;
+    }
+
     if (!emailRegex.test(formData.email)) {
       alert("Please enter a valid email address");
       return;
     }
+
     if (formData.phone && formData.phone.length !== 10) {
       alert("Please enter a valid 10-digit phone number");
       return;
     }
+
     alert("Message sent successfully!");
   };
+
   return (
     <>
       <Navbar />
@@ -43,10 +58,8 @@ const ContactUs = () => {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">Contact Us</span>
+        <span className="breadcrumb-current">Contact Us</span>
       </div>
       <div className="contact-page">
         {/* Header */}
@@ -79,9 +92,9 @@ const ContactUs = () => {
             </div>
             <h3>Our Office</h3>
             <p>
-              A-1, Education Hub,
+              Rohini Sector 21,
               <br />
-              New Delhi, India - 110001
+              Delhi, India - 110086
             </p>
           </div>
 
@@ -98,13 +111,13 @@ const ContactUs = () => {
 
           <div className="contact-card">
             <div className="icon yellow">
-              <FaMapMarkerAlt />
+              <FaEnvelope />
             </div>
-            <h3>Our Office</h3>
+            <h3>Email Us</h3>
             <p>
-              Rohini Sector 21,
-              <br />
-              Delhi, India
+              <a href="mailto:info@mindweavefoundation.com">
+                info@mindweavefoundation.com
+              </a>
             </p>
           </div>
 
@@ -137,9 +150,10 @@ const ContactUs = () => {
                     type="text"
                     placeholder="Enter your full name"
                     value={formData.fullName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, fullName: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+                      setFormData({ ...formData, fullName: val });
+                    }}
                   />
                 </div>
 

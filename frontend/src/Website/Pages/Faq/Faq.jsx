@@ -3,6 +3,7 @@ import "./Faq.css";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
 import { Link } from "react-router-dom";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 const categories = [
   { key: "all", emoji: "🏅", label: "All Questions", count: 24 },
   { key: "olympiads", emoji: "🏆", label: "Olympiads", count: 8 },
@@ -127,10 +128,8 @@ export default function Faq() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">FAQ</span>
+        <span className="breadcrumb-current">FAQ</span>
       </div>
       <main className="faq__page">
         {/* Hero */}
@@ -209,9 +208,12 @@ export default function Faq() {
                 have.
               </p>
               <div className="faq__cta-actions">
-                <a href="tel:+911234567890">📞 +91 12345 67890</a>
-                <a href="mailto:info@mindweaverfoundation.org">
-                  ✉ info@mindweaverfoundation.org
+                <a href="tel:+919540008894">📞 +91 9540008894</a>
+                {/* <a href="mailto:info@mindweavefoundation.com">
+                  info@mindweavefoundation.com
+                </a> */}
+                <a href="mailto:mindweavefoundation@gmail.com">
+                  info@mindweaverfoundation.org
                 </a>
               </div>
             </div>

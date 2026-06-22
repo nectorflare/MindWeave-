@@ -1,6 +1,7 @@
 import "./OlympiadsList.css";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaAtom,
@@ -101,10 +102,8 @@ function OlampiadsList() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">Olympiads</span>
+        <span className="breadcrumb-current">Olympiads</span>
       </div>
       <section className="olympiads-list">
         <div className="heading-wrapper">

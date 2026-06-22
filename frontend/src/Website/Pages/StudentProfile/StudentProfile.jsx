@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import EditProfilePanel from "../Editprofilepanel/Editprofilepanel";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 const profileData = {
   name: "Rahul Sharma",
   email: "rahul.sharma@email.com",
@@ -201,10 +202,8 @@ export default function MyProfile() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">My Profile</span>
+        <span className="breadcrumb-current">My Profile</span>
       </div>
       <div className="mp-root">
         <div className="mp-layout">

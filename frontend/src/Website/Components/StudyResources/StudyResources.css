@@ -133,11 +133,17 @@
   margin-top: 14px;
 }
 
-.download-btn {
+.buy-now-btn:hover {
+  opacity: 0.9;
+  background: #e8bb67; /* yellow rakhein hover pe bhi */
+  color: #011940;
+}
+
+.buy-now-btn {
   flex: 1;
   border: none;
-  background: #e8bb67;
-  color: #fff;
+  background: #e8bb67 !important;
+  color: #011940;
   font-weight: 600;
   font-size: 12px;
   padding: 8px 12px;
@@ -147,12 +153,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-
   white-space: nowrap;
-}
-.download-btn:hover {
-  opacity: 0.9;
-  background: #011940;
 }
 
 .preview-btn {

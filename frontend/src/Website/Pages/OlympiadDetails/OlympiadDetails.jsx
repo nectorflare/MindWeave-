@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./OlympiadDetails.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 // ── Data ─────────────────────────────────────────────────────────────────────
 
 const summaryRows = [
@@ -16,11 +17,6 @@ const summaryRows = [
   { icon: "💻", label: "Exam Mode", value: "Online" },
   { icon: "📅", label: "Exam Date", value: "Nov 2025" },
   { icon: "⏰", label: "Registration Last Date", value: "Oct 15, 2025" },
-  {
-    icon: "🌐",
-    label: "Official Website",
-    value: "www.mindweaverfoundation.org",
-  },
 ];
 
 const highlights = [
@@ -207,6 +203,7 @@ const navTabs = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function OlympiadDetails() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("od-overview");
   const [openAccordion, setOpenAccordion] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
@@ -256,16 +253,12 @@ export default function OlympiadDetails() {
         <Link to="/" className="breadcrumb-link">
           Home
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
         <Link to="/olympiads-list" className="breadcrumb-link">
           Olympiads
         </Link>
-
         <span className="breadcrumb-separator">›</span>
-
-        <span className="breadcrumb-active">
+        <span className="breadcrumb-current">
           International Science Olympiad (ISCO)
         </span>
       </div>
@@ -310,7 +303,7 @@ export default function OlympiadDetails() {
                 <div className="od-hero-actions">
                   <button
                     className="od-btn od-btn-gold"
-                    onClick={() => showToast("Register Now clicked")}
+                    onClick={() => navigate("/student-registration")}
                   >
                     Register Now
                   </button>
@@ -344,7 +337,7 @@ export default function OlympiadDetails() {
               ))}
               <button
                 className="od-btn od-btn-gold"
-                onClick={() => showToast("Register Now clicked")}
+                onClick={() => navigate("/student-registration")}
               >
                 Register Now
               </button>
@@ -608,15 +601,19 @@ export default function OlympiadDetails() {
               </h2>
               <p>Our support team is always here to help you.</p>
               <div className="od-support-line">
-                <span className="od-support-icon">📞</span> +91 12345 67890
+                <span className="od-support-icon">📞</span>
+                <a href="tel:+919540008894">+91 95400 08894</a>
               </div>
+
               <div className="od-support-line">
-                <span className="od-support-icon">✉</span>{" "}
-                info@mindweaverfoundation.org
-              </div>
-              <div className="od-support-line">
-                <span className="od-support-icon">💬</span> +91 12345 67890
-                (WhatsApp Support)
+                <span className="od-support-icon">💬</span>
+                <a
+                  href="https://wa.me/919540008894"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  +91 95400 08894 (WhatsApp Support)
+                </a>
               </div>
               <div className="od-support-visual">🎧</div>
             </div>
@@ -634,13 +631,13 @@ export default function OlympiadDetails() {
             <div className="od-cta-actions">
               <button
                 className="od-btn od-btn-gold"
-                onClick={() => showToast("Register Now clicked")}
+                onClick={() => navigate("/student-registration")}
               >
                 Register Now
               </button>
               <button
                 className="od-btn od-btn-dark"
-                onClick={() => showToast("Contact Us clicked")}
+                onClick={() => navigate("/contact-us")}
               >
                 Contact Us
               </button>

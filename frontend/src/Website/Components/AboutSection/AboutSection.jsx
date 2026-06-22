@@ -2,10 +2,12 @@ import "./AboutSection.css";
 // import aboutImage from "../../../assets/about-image.png";
 // import logo from "../../../assets/logo.png";
 import logo from "../../../assets/logo.jpeg";
+import { useNavigate } from "react-router-dom";
 import { Rocket } from "lucide-react";
 import bulletIcon from "../../../assets/bullet-point.png";
 
 function AboutSection() {
+  const navigate = useNavigate();
   return (
     <section className="about-section">
       <div className="about-container">
@@ -68,12 +70,17 @@ function AboutSection() {
           </div>
 
           <div className="about-buttons">
-            <button className="register-btn">
+            <button
+              className="register-btn"
+              onClick={() => navigate("/student-registration")}
+            >
               <Rocket size={18} />
               Register for 2026
             </button>
 
-            <button className="story-btn">Our Story →</button>
+            <button className="story-btn" onClick={() => navigate("/about-us")}>
+              Our Story →
+            </button>4
           </div>
         </div>
       </div>

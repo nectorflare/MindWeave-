@@ -46,7 +46,7 @@ export default function AchieversGallery() {
         backgroundImage: `url(${galleryData[activeIndex].image})`,
       }}
     >
-      <div className="overlay"></div>
+      <div className="gallery-overlay"></div>
 
       <div className="gallery-content">
         <div className="text-content">

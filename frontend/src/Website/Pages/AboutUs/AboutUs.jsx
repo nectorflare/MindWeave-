@@ -1,4 +1,6 @@
 import "./AboutUs.css";
+import "./AboutUs.css";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import studentGroup from "../../../assets/student-group.jpg";
 import buildingImage from "../../../assets/building.jpg";
 import testimonialImage from "../../../assets/testimonial-user.jpg";
@@ -9,22 +11,22 @@ const AboutUs = () => {
   const features = [
     {
       title: "National Reach",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      desc: "Connecting schools and students across every state in India through our growing Olympiad network.",
       icon: "🌍",
     },
     {
       title: "Expert Designed Programs",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      desc: "Curriculum crafted by educators and industry experts to match real-world skills and academic standards.",
       icon: "📚",
     },
     {
       title: "Practical Learning",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      desc: "Hands-on problem solving and application-based questions that go beyond rote memorization.",
       icon: "💡",
     },
     {
       title: "Merit Recognition",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      desc: "Celebrating every achiever with certificates, medals, and scholarships that motivate students to excel.",
       icon: "🏆",
     },
   ];
@@ -88,14 +90,17 @@ const AboutUs = () => {
             <h2>Our Journey</h2>
 
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel
-              nunc eu risus dignissim posuere. Integer tincidunt eros vel turpis
-              varius, sed volutpat augue tincidunt.
+              Mind Weaver Foundation was born from a simple belief — every
+              student deserves a platform to discover their true potential.
+              Starting from humble beginnings, we set out to bridge the gap
+              between classroom learning and real-world skills.
             </p>
 
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              gravida libero sit amet tellus malesuada vulputate.
+              Over the years, we have grown into a trusted name across India,
+              partnering with thousands of schools and empowering millions of
+              students through structured Olympiad programs and career guidance
+              initiatives.
             </p>
 
             <div className="stats">
@@ -129,10 +134,9 @@ const AboutUs = () => {
             <div>
               <h3>Our Vision</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem
-                ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum
-                dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit
+                To be India's leading student empowerment platform — nurturing a
+                generation of confident, curious, and future-ready learners who
+                can compete and thrive on any national or global stage.
               </p>
             </div>
           </div>
@@ -142,10 +146,10 @@ const AboutUs = () => {
             <div>
               <h3>Our Mission</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem
-                ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum
-                dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit
+                To provide every student, regardless of background, access to
+                high-quality competitive programs, career discovery tools, and
+                merit-based recognition that inspires lifelong learning and
+                excellence.
               </p>
             </div>
           </div>

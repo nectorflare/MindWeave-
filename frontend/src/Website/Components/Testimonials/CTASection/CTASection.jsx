@@ -1,6 +1,8 @@
 import "./CTASection.css";
+import { useNavigate } from "react-router-dom";
 
 function CTASection() {
+  const navigate = useNavigate();
   return (
     <section className="cta-section">
       <div className="cta-container">
@@ -18,7 +20,10 @@ function CTASection() {
         </p>
 
         <div className="cta-buttons">
-          <button className="cta-btn primary-btn">
+          <button
+            className="cta-btn primary-btn"
+            onClick={() => navigate("/student-registration")}
+          >
             🎓 Register Now — It's Free to Start
           </button>
 

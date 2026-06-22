@@ -3,6 +3,7 @@ import "./PrivacyPolicy.css";
 import lockImg from "../../../assets/privacy-lock.jpg";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import "../../Components/Breadcrumb/Breadcrumb.css";
 import { Link } from "react-router-dom";
 import {
   FiUser,
@@ -110,10 +111,8 @@ function PrivacyPolicy() {
           <Link to="/" className="breadcrumb-link">
             Home
           </Link>
-
           <span className="breadcrumb-separator">›</span>
-
-          <span className="breadcrumb-active">Privacy Policy</span>
+          <span className="breadcrumb-current">Privacy Policy</span>
         </div>
         {/* HERO */}
         <section className="privacy-hero">

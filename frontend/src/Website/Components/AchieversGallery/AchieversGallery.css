@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.overlay {
+.gallery-overlay {
   position: absolute;
   inset: 0;
 

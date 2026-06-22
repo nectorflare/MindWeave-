@@ -65,8 +65,9 @@
 // export default Hero;
 import "./Hero.css";
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 function Hero() {
+  const navigate = useNavigate();
   const [schools, setSchools] = useState(0);
   const [events, setEvents] = useState(0);
   const [students, setStudents] = useState(0);
@@ -97,7 +98,7 @@ function Hero() {
     <>
       <section className="hero">
         <div className="hero-overlay">
-          <div className="hero-content">
+          <div className="home-hero-content">
             <h1>
               DISCOVER YOUR
               <br />
@@ -112,7 +113,12 @@ function Hero() {
             </p>
 
             <div className="hero-buttons">
-              <button className="btn-primary">Register Now</button>
+              <button
+                className="btn-primary"
+                onClick={() => navigate("/student-registration")}
+              >
+                Register Now
+              </button>
               <button className="btn-secondary">Learn More</button>
             </div>
           </div>
@@ -142,10 +148,11 @@ function Hero() {
 
       <section className="info-strip">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+          Unicus Olympiads offers India's most comprehensive skill-based
+          competitions for students from KG to Class 11 — covering AI,
+          Mathematics, Science, and Career Discovery. Our exams help students
+          build confidence, critical thinking, and future-ready skills from an
+          early age.
         </p>
       </section>
     </>

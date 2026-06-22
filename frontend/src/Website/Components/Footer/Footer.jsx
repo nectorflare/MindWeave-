@@ -1,5 +1,7 @@
 import "./Footer.css";
 import { Link } from "react-router-dom";
+import logo from "../../../assets/logo.jpeg";
+import { FaYoutube, FaInstagram, FaLinkedin, FaFacebook } from "react-icons/fa";
 function Footer() {
   return (
     <footer className="footer">
@@ -7,20 +9,40 @@ function Footer() {
         <div className="footer-grid">
           {/* Logo Section */}
           <div className="footer-column footer-brand">
-            <h2>Mind Weave Foundation</h2>
+            <Link to="/">
+              <img
+                src={logo}
+                alt="Mind Weave Foundation"
+                className="footer-logo"
+              />
+            </Link>
 
-            <p className="footer-tagline">EMPOWERING MINDS · SHAPING FUTURES</p>
+            <p className="footer-tagline">Think Smart · Compete Better</p>
 
             <p className="footer-description">
               India's most future-ready olympiad platform — preparing every
               child not just for exams, but for life.
             </p>
+
+            <div className="footer-socials">
+              <a href="https://youtube.com" target="_blank" rel="noreferrer">
+                <FaYoutube />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer">
+                <FaInstagram />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+                <FaLinkedin />
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer">
+                <FaFacebook />
+              </a>
+            </div>
           </div>
 
           {/* Olympiads */}
           <div className="footer-column">
             <h4>OLYMPIADS</h4>
-
             <ul>
               <li>AI & Technology</li>
               <li>Mathematics</li>
@@ -34,7 +56,6 @@ function Footer() {
           {/* Resources */}
           <div className="footer-column">
             <h4>RESOURCES</h4>
-
             <ul>
               <li>Sample Papers</li>
               <li>Syllabus 2026-27</li>
@@ -44,28 +65,22 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
-
+          {/* Quick Links */}
           <div className="footer-column">
             <h4>QUICK LINKS</h4>
-
             <ul>
               <li>
                 <Link to="/about-us">About Us</Link>
               </li>
-
               <li>
                 <Link to="/contact-us">Contact Us</Link>
               </li>
-
               <li>
                 <Link to="/faq">FAQ</Link>
               </li>
-
               <li>
                 <Link to="/privacy-policy">Privacy Policy</Link>
               </li>
-
               <li>
                 <Link to="/terms-conditions">Terms & Conditions</Link>
               </li>
@@ -77,7 +92,6 @@ function Footer() {
           <p>© 2026 Nectorflare Private Limited. All rights reserved.</p>
           <div className="footer-links">
             <Link to="/privacy-policy">Privacy Policy</Link>
-
             <Link to="/terms-and-conditions">Terms of Use</Link>
           </div>
         </div>

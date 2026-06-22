@@ -45,37 +45,54 @@ import "./Navbar.css";
 import logo from "../../../assets/logo.jpeg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
+import { FiShoppingCart } from "react-icons/fi";
+import CartSlider from "../CartSlider/CartSlider";
+const removeItem = (id) => {
+  setCartItems((prev) => prev.filter((item) => item.id !== id));
+};
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // const [cartCount, setCartCount] = useState(2);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([
+    { id: 1, name: "Science Olympiad Book", price: 299, qty: 1 },
+    { id: 2, name: "Math Practice Set", price: 199, qty: 2 },
+  ]);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
-      {/* Top Bar */}
       <div className="top-bar">
-        <span>info@mindweavefoundation.com</span>
-        <span>|</span>
-        <span>+91 0000000485</span>
-        <span>|</span>
-        <span>WhatsApp Channel</span>
+        <span className="top-bar-content">
+          <a href="mailto:info@mindweavefoundation.com">
+            info@mindweavefoundation.com
+          </a>
+          {" | "}
+          <a href="tel:+919540008894">+91 9540008894</a>
+          {" | "}
+          <span>WhatsApp Channel</span>
+        </span>
       </div>
 
       {/* Main Navbar */}
       <nav className="navbar">
         <div className="logo">
-          <img src={logo} alt="MindWeave Logo" />
+          <Link to="/">
+            <img src={logo} alt="MindWeave Logo" />
+          </Link>
         </div>
 
-        <button
-          className="hamburger"
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
+        {!menuOpen && (
+          <button
+            className="hamburger"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
+        )}
 
         {menuOpen && <div className="overlay" onClick={closeMenu}></div>}
 
@@ -95,14 +112,17 @@ function Navbar() {
             OLYMPIADS
           </Link>
 
-          <Link to="/olympiads-list" onClick={closeMenu}>
-            QUIZZES
-          </Link>
-
           {/* <li onClick={closeMenu}>QUIZZES</li> */}
           <Link to="/books-store" onClick={closeMenu}>
             BOOK STORE
           </Link>
+
+          <div className="cart-icon-wrapper" onClick={() => setCartOpen(true)}>
+            <FiShoppingCart size={20} />
+            {cartItems.length > 0 && (
+              <span className="cart-badge">{cartItems.length}</span>
+            )}
+          </div>
 
           {/* Desktop dropdown - hover pe dono options */}
           <div className="login-dropdown">
@@ -124,6 +144,12 @@ function Navbar() {
           </div>
         </ul>
       </nav>
+      <CartSlider
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        cartItems={cartItems}
+        removeItem={removeItem}
+      />
     </>
   );
 }
