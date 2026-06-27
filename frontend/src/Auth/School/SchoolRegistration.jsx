@@ -326,11 +326,11 @@ export default function SchoolRegistration() {
       return;
     }
 
-    if (name === "affiliationNumber") {
-      const numericValue = value.replace(/\D/g, "").slice(0, 7);
-      setFormData({ ...formData, affiliationNumber: numericValue });
-      return;
-    }
+    // if (name === "affiliationNumber") {
+    //   const numericValue = value.replace(/\D/g, "").slice(0, 7);
+    //   setFormData({ ...formData, affiliationNumber: numericValue });
+    //   return;
+    // }
 
     // ── Phone numbers: only digits, max 10 ──
     if (
@@ -342,18 +342,18 @@ export default function SchoolRegistration() {
     }
 
     // ── UDISE Code: only digits, max 11 ──
-    if (name === "udiseCode") {
-      const numericValue = value.replace(/\D/g, "").slice(0, 11);
-      setFormData({ ...formData, udiseCode: numericValue });
-      return;
-    }
+    // if (name === "udiseCode") {
+    //   const numericValue = value.replace(/\D/g, "").slice(0, 11);
+    //   setFormData({ ...formData, udiseCode: numericValue });
+    //   return;
+    // }
 
     // ── Established Year: only digits, max 4 ──
-    if (name === "establishedYear") {
-      const numericValue = value.replace(/\D/g, "").slice(0, 4);
-      setFormData({ ...formData, establishedYear: numericValue });
-      return;
-    }
+    // if (name === "establishedYear") {
+    //   const numericValue = value.replace(/\D/g, "").slice(0, 4);
+    //   setFormData({ ...formData, establishedYear: numericValue });
+    //   return;
+    // }
 
     // ── Name fields: no digits allowed ──
     const nameFields = [
@@ -402,6 +402,7 @@ export default function SchoolRegistration() {
       alert("School Name is required");
       return;
     }
+
     if (!formData.schoolType) {
       alert("Please select School Type");
       return;
@@ -527,6 +528,7 @@ export default function SchoolRegistration() {
       if (res.ok) {
         alert("School Registered Successfully");
         console.log(data);
+        navigate("/school-login");
       } else {
         alert(data.message || "Something went wrong");
       }

@@ -202,9 +202,9 @@ const AboutUs = () => {
               and opportunities."
             </p>
 
-            <h3 className="founder-signature">Ankur Sharma</h3>
+            <h3 className="founder-signature">Dr. Piyush Kumar Sharma</h3>
 
-            <p className="founder-name">Ankur Sharma</p>
+            <p className="founder-name">Dr. Piyush Kumar Sharma</p>
 
             <p className="founder-designation">
               Founder & Chairman

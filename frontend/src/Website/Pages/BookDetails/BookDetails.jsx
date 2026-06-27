@@ -215,7 +215,7 @@ export default function BookDetails() {
 
               <button
                 className="bd-outline-btn"
-                onClick={() => window.open("/brochure.pdf", "_blank")}
+                onClick={() => window.open("#", "_blank")}
               >
                 Download Brochure
               </button>
@@ -438,6 +438,7 @@ export default function BookDetails() {
               <button
                 className="bd-btn bd-btn-orange"
                 style={{ marginTop: "16px" }}
+                onClick={() => navigate("/contact-us")}
               >
                 Contact Us
               </button>
@@ -452,7 +453,10 @@ export default function BookDetails() {
             </div>
             <div className="bd-cta-actions">
               <button className="bd-btn bd-btn-orange">Buy Now</button>
-              <button className="bd-btn bd-btn-blue bd-btn-outline-white">
+              <button
+                className="bd-btn bd-btn-blue bd-btn-outline-white"
+                onClick={() => navigate("/contact-us")}
+              >
                 Contact Us
               </button>
             </div>

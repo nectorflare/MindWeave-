@@ -80,7 +80,7 @@ function AboutSection() {
 
             <button className="story-btn" onClick={() => navigate("/about-us")}>
               Our Story →
-            </button>4
+            </button>
           </div>
         </div>
       </div>

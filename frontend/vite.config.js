@@ -17,7 +17,7 @@ export default defineConfig({
     sourcemap: false,
   },
   server: {
-    historyApiFallback: true, // ✅ Yeh line add karo
+    historyApiFallback: true,
   },
 
   preview: {

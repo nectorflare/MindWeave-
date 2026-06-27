@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./StudentRegistration.css";
 import Navbar from "../../Website/Components/Navbar/Navbar";
 import Footer from "../../Website/Components/Footer/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const USER_ICON = (
   <svg
@@ -154,13 +154,16 @@ const indianStates = [
   "Assam",
   "Bihar",
   "Chhattisgarh",
+  "Delhi",
   "Goa",
   "Gujarat",
   "Haryana",
   "Himachal Pradesh",
+  "Jammu & Kashmir",
   "Jharkhand",
   "Karnataka",
   "Kerala",
+  "Ladakh",
   "Madhya Pradesh",
   "Maharashtra",
   "Manipur",
@@ -177,9 +180,6 @@ const indianStates = [
   "Uttar Pradesh",
   "Uttarakhand",
   "West Bengal",
-  "Delhi",
-  "Jammu & Kashmir",
-  "Ladakh",
 ];
 
 const grades = [
@@ -265,6 +265,7 @@ function FieldError({ msg }) {
 }
 
 export default function StudentRegistration() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -339,7 +340,10 @@ export default function StudentRegistration() {
       "addressCity",
     ];
     if (nameOnlyFields.includes(name)) {
-      setFormData((prev) => ({ ...prev, [name]: value.replace(/[0-9]/g, "") }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value.replace(/[^a-zA-Z\s]/g, ""),
+      }));
       return;
     }
 
@@ -502,6 +506,7 @@ export default function StudentRegistration() {
       if (res.ok) {
         alert("Registration successful!");
         console.log("Response:", data);
+        navigate("/student-login");
       } else {
         alert(data.message || "Something went wrong");
       }

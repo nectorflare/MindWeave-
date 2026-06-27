@@ -57,7 +57,7 @@ function StepsSection() {
               className="step-card"
               key={step.id}
               style={{
-                top: `${100 + index * 20}px`,
+                top: `${80 + index * 20}px`,
                 zIndex: index + 1,
               }}
             >

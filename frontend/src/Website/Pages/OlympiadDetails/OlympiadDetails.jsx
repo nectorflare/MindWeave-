@@ -309,7 +309,7 @@ export default function OlympiadDetails() {
                   </button>
                   <button
                     className="od-btn od-btn-dark"
-                    onClick={() => showToast("Download Brochure clicked")}
+                    onClick={() => window.open("#", "_blank")}
                   >
                     Download Brochure
                   </button>
@@ -343,7 +343,7 @@ export default function OlympiadDetails() {
               </button>
               <button
                 className="od-btn od-btn-outline"
-                onClick={() => showToast("Download Brochure clicked")}
+                onClick={() => window.open("#", "_blank")}
               >
                 Download Brochure
               </button>
