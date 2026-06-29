@@ -294,16 +294,45 @@ export default function EditSchoolProfile({
       newErrors.mobileNumber = "Enter valid 10-digit number.";
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
     const saveData = { ...form };
     if (passwords.password) saveData.password = passwords.password;
-    onSave && onSave(saveData);
-    onClose();
+
+    try {
+      const token = localStorage.getItem("token");
+      const schoolId = localStorage.getItem("schoolId");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/schools/${schoolId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(saveData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        onSave && onSave(data.schoolProfile);
+        onClose();
+        alert("Profile updated successfully!");
+      } else {
+        alert(data.message || "Update failed!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong!");
+    }
   };
 
   // Locked field (read-only)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SchoolProfile.css";
 import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -6,37 +6,37 @@ import Footer from "../../Components/Footer/Footer";
 import "../../Components/Breadcrumb/Breadcrumb.css";
 import EditSchoolProfile from "../EditSchoolProfile/EditSchoolProfile";
 
-const initialProfileData = {
-  // School Info
-  schoolName: "ABC Public School",
-  schoolCode: "",
-  schoolType: "CBSE",
-  boardName: "CBSE",
-  affiliationNumber: "CBSE12345",
-  udiseCode: "09123456789",
-  establishedYear: "2020",
-  // Address
-  addressLine1: "Sector 15",
-  addressLine2: "Near City Mall",
-  city: "Noida",
-  district: "Noida",
-  state: "Uttar Pradesh",
-  pincode: "201301",
-  country: "India",
-  // Principal
-  principalName: "Sonam Sharma",
-  principalMobileNumber: "9876543210",
-  principalEmailId: "abc@gmail.com",
-  // Coordinator
-  olympiadCoordinatorName: "Rajesh Kumar",
-  designation: "Academic Coordinator",
-  mobileNumber: "9876543210",
-  whatsappNumber: "9876543211",
-  coordinatorEmailId: "coordinator@abcschool.com",
-  // School Contact
-  emailId: "school@abcschool.com",
-  memberSince: "15 March 2024",
-};
+// const initialProfileData = {
+//   // School Info
+//   schoolName: "ABC Public School",
+//   schoolCode: "",
+//   schoolType: "CBSE",
+//   boardName: "CBSE",
+//   affiliationNumber: "CBSE12345",
+//   udiseCode: "09123456789",
+//   establishedYear: "2020",
+//   // Address
+//   addressLine1: "Sector 15",
+//   addressLine2: "Near City Mall",
+//   city: "Noida",
+//   district: "Noida",
+//   state: "Uttar Pradesh",
+//   pincode: "201301",
+//   country: "India",
+//   // Principal
+//   principalName: "Sonam Sharma",
+//   principalMobileNumber: "9876543210",
+//   principalEmailId: "abc@gmail.com",
+//   // Coordinator
+//   olympiadCoordinatorName: "Rajesh Kumar",
+//   designation: "Academic Coordinator",
+//   mobileNumber: "9876543210",
+//   whatsappNumber: "9876543211",
+//   coordinatorEmailId: "coordinator@abcschool.com",
+//   // School Contact
+//   emailId: "school@abcschool.com",
+//   memberSince: "15 March 2024",
+// };
 
 const statsData = [
   {
@@ -198,8 +198,27 @@ const navItems = [
 
 export default function SchoolProfile() {
   const [activePath, setActivePath] = useState("/school/my-profile");
-  const [profileData, setProfileData] = useState(initialProfileData);
+  const [profileData, setProfileData] = useState({});
   const [editSliderOpen, setEditSliderOpen] = useState(false);
+  useEffect(() => {
+    const fetchSchool = async () => {
+      const token = localStorage.getItem("token");
+      const schoolId = localStorage.getItem("schoolId");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/schools/${schoolId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await response.json();
+      setProfileData(data.schoolProfile);
+    };
+
+    fetchSchool();
+  }, []);
 
   const handleNav = (path) => {
     setActivePath(path);

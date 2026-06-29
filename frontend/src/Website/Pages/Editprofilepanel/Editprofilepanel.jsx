@@ -40,13 +40,39 @@ export default function EditProfilePanel({ isOpen, onClose, profile, onSave }) {
     setEditingField(null);
   };
 
-  const handleSaveAll = () => {
-    onSave(form);
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-      onClose();
-    }, 1800);
+  const handleSaveAll = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const studentId = localStorage.getItem("studentId");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/students/${studentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(form),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        onSave(data.studentProfile);
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+          onClose();
+        }, 1800);
+      } else {
+        alert(data.message || "Update failed!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong!");
+    }
   };
 
   const handleOverlayClick = (e) => {

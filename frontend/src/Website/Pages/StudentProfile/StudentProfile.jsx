@@ -837,7 +837,6 @@ export default function MyProfile() {
     memberSince: "",
   });
 
-  // ← API se real data fetch karo
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -848,7 +847,7 @@ export default function MyProfile() {
     const payload = JSON.parse(atob(token.split(".")[1]));
     const userId = payload.userId;
 
-    fetch(`${import.meta.env.VITE_API_URL}/api/iam/students/${userId}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/students/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

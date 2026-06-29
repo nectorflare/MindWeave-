@@ -73,15 +73,10 @@ function StudentLogin() {
 
       const data = await response.json();
 
-      // if (response.ok) {
-      //   localStorage.setItem("token", data.token);
-      //   alert("Login Successful");
-      //   navigate("/");
-      // }
-
       if (response.ok) {
         localStorage.setItem("token", data.token);
         const payload = JSON.parse(atob(data.token.split(".")[1]));
+        localStorage.setItem("schoolId", payload.userId);
         localStorage.setItem(
           "user",
           JSON.stringify({ firstName: payload.email.split("@")[0] }),
