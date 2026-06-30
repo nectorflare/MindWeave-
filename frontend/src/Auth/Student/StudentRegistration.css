@@ -128,46 +128,14 @@
 .sidebar {
   background: #fff;
   border-radius: 14px;
-  padding: 28px 22px;
+  padding: 20px 18px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
   max-width: 460px;
-}
-
-/* .sidebar {
   position: sticky;
   top: 20px;
-  align-self: flex-start;
-  max-height: calc(100vh - 40px);
-  padding: 28px 22px 36px;
-  overflow-y: auto;
-} */
-
-/* NAYA — yeh lagao */
-/* ── Main 2-col Layout ── */
-/* .main-layout {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 24px;
-  align-items: start; 
-} */
-
-/* .sidebar {
-  position: sticky; 
-  top: 20px;
-  align-self: start; 
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
-  scrollbar-width: none;
-  background: #fff;
-  border-radius: 14px;
-  padding: 28px 22px 36px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  align-self: start;
+  height: fit-content;
 }
-.sidebar::-webkit-scrollbar {
-  display: none;
-} */
 
 .sidebar-illustration {
   display: flex;

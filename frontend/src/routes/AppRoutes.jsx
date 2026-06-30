@@ -17,7 +17,8 @@ import Faq from "../Website/Pages/Faq/Faq";
 import BookDetails from "../Website/Pages/BookDetails/BookDetails";
 import StudentProfile from "../Website/Pages/StudentProfile/StudentProfile";
 import SchoolProfile from "../Website/Pages/SchoolProfile/SchoolProfile";
-
+import Results from "../Website/Pages/results/results";
+import ExamSchedule from "../Website/Pages/ExamSchedule/ExamSchedule";
 function AppRoutes() {
   return (
     <Routes>
@@ -42,6 +43,8 @@ function AppRoutes() {
       <Route path="/book-details" element={<BookDetails />} />
       <Route path="/student/my-profile" element={<StudentProfile />} />
       <Route path="/school/my-profile" element={<SchoolProfile />} />
+      <Route path="/results" element={<Results />} />
+      <Route path="/exam-schedule" element={<ExamSchedule />} />
     </Routes>
   );
 }

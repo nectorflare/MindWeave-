@@ -3,40 +3,9 @@ import "./SchoolProfile.css";
 import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import ProfileSidebar from "../../Components/ProfileSidebar/ProfileSidebar";
 import "../../Components/Breadcrumb/Breadcrumb.css";
 import EditSchoolProfile from "../EditSchoolProfile/EditSchoolProfile";
-
-// const initialProfileData = {
-//   // School Info
-//   schoolName: "ABC Public School",
-//   schoolCode: "",
-//   schoolType: "CBSE",
-//   boardName: "CBSE",
-//   affiliationNumber: "CBSE12345",
-//   udiseCode: "09123456789",
-//   establishedYear: "2020",
-//   // Address
-//   addressLine1: "Sector 15",
-//   addressLine2: "Near City Mall",
-//   city: "Noida",
-//   district: "Noida",
-//   state: "Uttar Pradesh",
-//   pincode: "201301",
-//   country: "India",
-//   // Principal
-//   principalName: "Sonam Sharma",
-//   principalMobileNumber: "9876543210",
-//   principalEmailId: "abc@gmail.com",
-//   // Coordinator
-//   olympiadCoordinatorName: "Rajesh Kumar",
-//   designation: "Academic Coordinator",
-//   mobileNumber: "9876543210",
-//   whatsappNumber: "9876543211",
-//   coordinatorEmailId: "coordinator@abcschool.com",
-//   // School Contact
-//   emailId: "school@abcschool.com",
-//   memberSince: "15 March 2024",
-// };
 
 const statsData = [
   {
@@ -180,26 +149,10 @@ const downloads = [
   },
 ];
 
-const navItems = [
-  { icon: "🏫", label: "School Profile", path: "/school/my-profile" },
-  { icon: "🏆", label: "My Olympiads", path: "/school/my-olympiads" },
-  { icon: "📦", label: "My Orders", path: "/school/my-orders" },
-  { icon: "🏅", label: "My Certificates", path: "/school/my-certificates" },
-  { icon: "⬇️", label: "My Downloads", path: "/school/my-downloads" },
-  {
-    icon: "🔔",
-    label: "Notifications",
-    path: "/school/notifications",
-    badge: 3,
-  },
-  { icon: "🔒", label: "Change Password", path: "/school/change-password" },
-  { icon: "🚪", label: "Logout", path: "/logout" },
-];
-
 export default function SchoolProfile() {
-  const [activePath, setActivePath] = useState("/school/my-profile");
   const [profileData, setProfileData] = useState({});
   const [editSliderOpen, setEditSliderOpen] = useState(false);
+
   useEffect(() => {
     const fetchSchool = async () => {
       const token = localStorage.getItem("token");
@@ -221,7 +174,6 @@ export default function SchoolProfile() {
   }, []);
 
   const handleNav = (path) => {
-    setActivePath(path);
     window.history.pushState({}, "", path);
   };
 
@@ -241,22 +193,8 @@ export default function SchoolProfile() {
       </div>
       <div className="sp-root">
         <div className="sp-layout">
-          {/* Sidebar */}
-          <aside className="sp-sidebar">
-            {navItems.map((item) => (
-              <button
-                key={item.path}
-                className={`sp-nav-item${activePath === item.path ? " sp-nav-active" : ""}`}
-                onClick={() => handleNav(item.path)}
-              >
-                <span className="sp-nav-icon">{item.icon}</span>
-                <span className="sp-nav-label">{item.label}</span>
-                {item.badge && (
-                  <span className="sp-nav-badge">{item.badge}</span>
-                )}
-              </button>
-            ))}
-          </aside>
+          {/* Sidebar (shared across all school dashboard pages) */}
+          <ProfileSidebar />
 
           {/* Main Content */}
           <main className="sp-main">

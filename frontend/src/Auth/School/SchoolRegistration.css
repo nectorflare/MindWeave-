@@ -90,9 +90,13 @@
 .sidebar {
   background: #fff;
   border-radius: 14px;
-  padding: 28px 22px;
+  padding: 20px 18px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
   max-width: 460px;
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  height: fit-content;
 }
 
 .sidebar-illustration {

@@ -1,0 +1,71 @@
+.psb-sidebar {
+  width: 260px;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e7eaf2;
+  border-radius: 12px;
+  padding: 12px;
+  position: sticky;
+  top: 16px;
+}
+
+.psb-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.psb-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3c4660;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.psb-link:hover {
+  background: #f3f5fa;
+}
+
+.psb-link.psb-active {
+  background: #0f1d40;
+  color: #fff;
+}
+
+.psb-badge {
+  margin-left: auto;
+  background: #e23c3c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.psb-logout {
+  color: #e23c3c;
+  margin-top: 6px;
+  border-top: 1px solid #eef0f5;
+  padding-top: 14px;
+}
+
+.psb-logout:hover {
+  background: #fef2f2;
+}
+
+@media (max-width: 900px) {
+  .psb-sidebar {
+    width: 100%;
+    position: static;
+  }
+}
