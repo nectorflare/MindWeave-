@@ -44,12 +44,9 @@ function Footer() {
           <div className="footer-column">
             <h4>OLYMPIADS</h4>
             <ul>
-              <li>AI & Technology</li>
               <li>Mathematics</li>
               <li>Science</li>
               <li>English</li>
-              <li>Career Lab</li>
-              <li>Life Skills</li>
             </ul>
           </div>
 
@@ -57,11 +54,17 @@ function Footer() {
           <div className="footer-column">
             <h4>RESOURCES</h4>
             <ul>
-              <li>Sample Papers</li>
-              <li>Syllabus 2026-27</li>
+              <li>
+                <Link to="/practice-paper-list">Practice Papers</Link>
+              </li>
+              <li>
+                <Link to="/syllabus">Syllabus</Link>
+              </li>
               <li>Exam Dates</li>
               <li>Awards & Prizes</li>
-              <li>FAQs</li>
+              <li>
+                <Link to="/results">Results</Link>
+              </li>
             </ul>
           </div>
 
@@ -75,6 +78,7 @@ function Footer() {
               <li>
                 <Link to="/contact-us">Contact Us</Link>
               </li>
+
               <li>
                 <Link to="/faq">FAQ</Link>
               </li>
@@ -89,7 +93,17 @@ function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 Nectorflare Private Limited. All rights reserved.</p>
+          <p>
+            © 2026{" "}
+            <a
+              href="https://www.nectorflare.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Nectorflare Private Limited
+            </a>
+            . All rights reserved.
+          </p>
           <div className="footer-links">
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-and-conditions">Terms of Use</Link>

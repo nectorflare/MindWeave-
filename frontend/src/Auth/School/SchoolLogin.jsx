@@ -79,7 +79,10 @@ function StudentLogin() {
         localStorage.setItem("schoolId", payload.userId);
         localStorage.setItem(
           "user",
-          JSON.stringify({ firstName: payload.email.split("@")[0] }),
+          JSON.stringify({
+            firstName: payload.email.split("@")[0],
+            role: payload.role,
+          }),
         );
         alert("Login Successful");
         navigate("/");

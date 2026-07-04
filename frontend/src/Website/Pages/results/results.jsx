@@ -16,17 +16,50 @@ import "./results.css";
 export default function Results() {
   const [rollNumber, setRollNumber] = useState("");
   const [olympiad, setOlympiad] = useState("");
-  const [examType, setExamType] = useState("");
   const [mode, setMode] = useState("");
+  const [resultData, setResultData] = useState(null);
+  const handleRollNumberChange = (e) => {
+    const value = e.target.value;
 
+    if (/^\d{0,5}$/.test(value)) {
+      setRollNumber(value);
+    }
+  };
   const handleViewResult = (e) => {
     e.preventDefault();
-    if (!rollNumber || !olympiad || !examType || !mode) {
+    if (!rollNumber || !olympiad || !mode) {
       alert("Please fill in all the fields to view your result.");
       return;
     }
-    // TODO: call API to fetch result using rollNumber, olympiad, examType, mode
-    console.log({ rollNumber, olympiad, examType, mode });
+
+    // TEMPORARY: dummy data (backend ready hone tak testing ke liye)
+    const dummyResult = {
+      success: true,
+      data: {
+        rollNumber: rollNumber,
+        centerCode: "CTR10023",
+        studentName: "Rohan Sharma",
+        class: "8",
+        olympiad: "National Science Olympiad",
+        mode: "Online",
+        examDate: "2024-11-15",
+        totalMarks: 100,
+        obtainedMarks: 87,
+        percentage: 87,
+        correctAnswers: 44,
+        status: "Qualified",
+
+        sectionWise: [
+          { section: "Physics", total: 20, obtained: 18 },
+          { section: "Chemistry", total: 20, obtained: 16 },
+          { section: "Logical Reasoning", total: 10, obtained: 9 },
+        ],
+        certificateUrl: "/certificates/MW2024001.pdf",
+      },
+    };
+
+    console.log(dummyResult);
+    setResultData(dummyResult.data); // agar aapne useState banaya ho
   };
 
   return (
@@ -64,9 +97,10 @@ export default function Results() {
               <label>Roll Number</label>
               <input
                 type="text"
-                placeholder="Enter your roll number"
+                placeholder="Enter 5-digit roll number"
                 value={rollNumber}
-                onChange={(e) => setRollNumber(e.target.value)}
+                onChange={handleRollNumberChange}
+                maxLength={5}
               />
               <span className="field-hint">
                 Enter the roll number provided during registration
@@ -83,32 +117,13 @@ export default function Results() {
                 onChange={(e) => setOlympiad(e.target.value)}
               >
                 <option value="">-- Select Olympiad --</option>
-                <option value="nso">National Science Olympiad</option>
-                <option value="imo">International Mathematics Olympiad</option>
-                <option value="ieo">International English Olympiad</option>
-                <option value="cyber">Cyber Olympiad</option>
-                <option value="gk">GK Olympiad</option>
+                <option value="eng">English</option>
+                <option value="math">Mathematics</option>
+                <option value="sci">Science</option>
               </select>
               <span className="field-hint">
                 Choose the olympiad you appeared for
               </span>
-            </div>
-
-            <div className="form-field">
-              <div className="field-icon">
-                <FileText size={20} />
-              </div>
-              <label>Select Exam Type</label>
-              <select
-                value={examType}
-                onChange={(e) => setExamType(e.target.value)}
-              >
-                <option value="">-- Select Exam Type --</option>
-                <option value="foundation">Foundation</option>
-                <option value="school">School</option>
-                <option value="other">Other</option>
-              </select>
-              <span className="field-hint">Select the type of exam</span>
             </div>
 
             <div className="form-field">
@@ -132,6 +147,18 @@ export default function Results() {
             </button>
           </div>
         </form>
+
+        {resultData && (
+          <div className="result-card-display">
+            <h2>Result for {resultData.studentName}</h2>
+            <p>Roll Number: {resultData.rollNumber}</p>
+            <p>Center Code: {resultData.centerCode}</p>
+            <p>
+              Marks: {resultData.obtainedMarks} / {resultData.totalMarks}
+            </p>
+            <p>Status: {resultData.status}</p>
+          </div>
+        )}
 
         <div className="results-note">
           <Info size={18} />

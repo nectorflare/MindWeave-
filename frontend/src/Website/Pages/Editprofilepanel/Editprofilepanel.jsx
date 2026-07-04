@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./EditProfilePanel.css";
 
-/**
- * EditProfilePanel
- * Props:
- *   isOpen   – boolean, controls visibility
- *   onClose  – fn called when panel closes
- *   profile  – current profile object
- *   onSave   – fn(updatedProfile) called on Save
- */
 export default function EditProfilePanel({ isOpen, onClose, profile, onSave }) {
   const [form, setForm] = useState({ ...profile });
-  const [editingField, setEditingField] = useState(null); // which field is in edit mode
+  const [editingField, setEditingField] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const panelRef = useRef(null);
 
