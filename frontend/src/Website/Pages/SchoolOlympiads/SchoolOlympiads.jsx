@@ -7,111 +7,118 @@ import {
   Monitor,
   Building2,
   CheckCircle2,
+  School,
 } from "lucide-react";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
-import "./MyOlympiads.css";
+import "./SchoolOlympiads.css";
 
-const dummyOlympiads = [
+const dummySchoolOlympiads = [
   {
-    examId: "EX1001",
+    examId: "SC1001",
     olympiadName: "Science Olympiad",
-    class: "Class 10",
+    class: "Class 8",
     examDate: "2024-05-12",
     examTime: "10:00 AM - 12:00 PM",
     mode: "Online",
     status: "upcoming",
   },
   {
-    examId: "EX1002",
+    examId: "SC1002",
     olympiadName: "Mathematics Olympiad",
-
-    class: "Class 10",
+    class: "Class 9",
     examDate: "2024-05-18",
     examTime: "10:00 AM - 12:00 PM",
     mode: "Offline",
     status: "upcoming",
   },
   {
-    examId: "EX1003",
+    examId: "SC1003",
     olympiadName: "English Olympiad",
-
     class: "Class 10",
     examDate: "2024-03-10",
     examTime: "10:00 AM - 12:00 PM",
     mode: "Online",
     status: "completed",
-
+    obtainedMarks: 87,
+    totalMarks: 100,
     resultStatus: "Qualified",
   },
   {
-    examId: "EX1004",
+    examId: "SC1004",
     olympiadName: "Science Olympiad",
-
-    class: "Class 10",
+    class: "Class 8",
     examDate: "2024-02-20",
     examTime: "10:00 AM - 12:00 PM",
     mode: "Offline",
     status: "completed",
-
+    obtainedMarks: 72,
+    totalMarks: 100,
     resultStatus: "Qualified",
+  },
+  {
+    examId: "SC1005",
+    olympiadName: "General Knowledge Olympiad",
+    class: "Class 9",
+    examDate: "2024-06-02",
+    examTime: "10:00 AM - 12:00 PM",
+    mode: "Online",
+    status: "upcoming",
   },
 ];
 
-export default function MyOlympiads() {
-  const [activeTab, setActiveTab] = useState("upcoming");
+export default function SchoolOlympiads() {
+  const [activeClass, setActiveClass] = useState("All");
   const navigate = useNavigate();
 
-  const upcomingExams = dummyOlympiads.filter((e) => e.status === "upcoming");
-  const completedExams = dummyOlympiads.filter((e) => e.status === "completed");
+  // unique class list derived from data (e.g. ["Class 8", "Class 9", "Class 10"])
+  const classList = [
+    "All",
+    ...new Set(dummySchoolOlympiads.map((e) => e.class)),
+  ];
 
   const visibleExams =
-    activeTab === "upcoming" ? upcomingExams : completedExams;
+    activeClass === "All"
+      ? dummySchoolOlympiads
+      : dummySchoolOlympiads.filter((e) => e.class === activeClass);
 
   const handleViewResult = (exam) => {
     navigate("/results", { state: { examId: exam.examId } });
   };
-  console.log(JSON.stringify(dummyOlympiads, null, 2));
+
+  console.log(JSON.stringify(dummySchoolOlympiads, null, 2));
+
   return (
     <>
       <Navbar />
 
-      <div className="my-olympiads-page">
-        <div className="my-olympiads-header">
-          <div className="my-olympiads-icon">
-            <Trophy size={26} />
+      <div className="school-olympiads-page">
+        <div className="school-olympiads-header">
+          <div className="school-olympiads-icon">
+            <School size={26} />
           </div>
           <div>
-            <h1>My Olympiads</h1>
-            <p>
-              Track your upcoming exams and see the ones you've already taken
-            </p>
+            <h1>School Olympiads</h1>
+            <p>View all olympiads happening across classes in your school</p>
           </div>
         </div>
 
-        <div className="my-olympiads-tabs">
-          <button
-            className={`tab-btn ${activeTab === "upcoming" ? "active" : ""}`}
-            onClick={() => setActiveTab("upcoming")}
-          >
-            Upcoming ({upcomingExams.length})
-          </button>
-          <button
-            className={`tab-btn ${activeTab === "completed" ? "active" : ""}`}
-            onClick={() => setActiveTab("completed")}
-          >
-            Completed ({completedExams.length})
-          </button>
+        <div className="school-olympiads-tabs">
+          {classList.map((cls) => (
+            <button
+              key={cls}
+              className={`tab-btn ${activeClass === cls ? "active" : ""}`}
+              onClick={() => setActiveClass(cls)}
+            >
+              {cls}
+            </button>
+          ))}
         </div>
 
         {visibleExams.length === 0 ? (
           <div className="empty-state">
             <Trophy size={32} />
-            <p>
-              {activeTab === "upcoming"
-                ? "No upcoming olympiads right now."
-                : "You haven't completed any olympiads yet."}
-            </p>
+            <p>No olympiads found for {activeClass}.</p>
           </div>
         ) : (
           <div className="olympiad-cards">
@@ -147,6 +154,13 @@ export default function MyOlympiads() {
                     {exam.mode}
                   </span>
                 </div>
+
+                {exam.status === "completed" && (
+                  <div className="olympiad-card-score">
+                    Score: <strong>{exam.obtainedMarks}</strong> /{" "}
+                    {exam.totalMarks}
+                  </div>
+                )}
 
                 {exam.status === "completed" && (
                   <div className="olympiad-card-action">

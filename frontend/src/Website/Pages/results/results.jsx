@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import {
   Trophy,
   User,
-  FileText,
   Monitor,
   Search,
   Info,
   ShieldCheck,
   Laptop,
+  School,
 } from "lucide-react";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
@@ -15,9 +15,11 @@ import "./results.css";
 
 export default function Results() {
   const [rollNumber, setRollNumber] = useState("");
+  const [centerCode, setCenterCode] = useState("");
   const [olympiad, setOlympiad] = useState("");
   const [mode, setMode] = useState("");
   const [resultData, setResultData] = useState(null);
+
   const handleRollNumberChange = (e) => {
     const value = e.target.value;
 
@@ -25,10 +27,25 @@ export default function Results() {
       setRollNumber(value);
     }
   };
+
+  const handleCenterCodeChange = (e) => {
+    const value = e.target.value;
+
+    // only digits allowed, max 3 digits
+    if (/^\d{0,3}$/.test(value)) {
+      setCenterCode(value);
+    }
+  };
+
   const handleViewResult = (e) => {
     e.preventDefault();
-    if (!rollNumber || !olympiad || !mode) {
+    if (!rollNumber || !centerCode || !olympiad || !mode) {
       alert("Please fill in all the fields to view your result.");
+      return;
+    }
+
+    if (centerCode.length !== 3) {
+      alert("Center code must be exactly 3 digits.");
       return;
     }
 
@@ -37,7 +54,7 @@ export default function Results() {
       success: true,
       data: {
         rollNumber: rollNumber,
-        centerCode: "CTR10023",
+        centerCode: centerCode,
         studentName: "Rohan Sharma",
         class: "8",
         olympiad: "National Science Olympiad",
@@ -58,8 +75,8 @@ export default function Results() {
       },
     };
 
-    console.log(dummyResult);
-    setResultData(dummyResult.data); // agar aapne useState banaya ho
+    console.log(JSON.stringify(dummyResult, null, 2));
+    setResultData(dummyResult.data);
   };
 
   return (
@@ -101,9 +118,28 @@ export default function Results() {
                 value={rollNumber}
                 onChange={handleRollNumberChange}
                 maxLength={5}
+                inputMode="numeric"
               />
               <span className="field-hint">
                 Enter the roll number provided during registration
+              </span>
+            </div>
+
+            <div className="form-field">
+              <div className="field-icon">
+                <School size={20} />
+              </div>
+              <label>Center Code</label>
+              <input
+                type="text"
+                placeholder="Enter 3-digit center code"
+                value={centerCode}
+                onChange={handleCenterCodeChange}
+                maxLength={3}
+                inputMode="numeric"
+              />
+              <span className="field-hint">
+                Enter the 3-digit center code provided on your admit card
               </span>
             </div>
 
@@ -194,19 +230,19 @@ export default function Results() {
           </div>
 
           <div className="info-card">
-            <div className="info-icon purple">
-              <FileText size={26} />
-            </div>
-            <h4>Choose Exam Type</h4>
-            <p>Select the correct exam type (Foundation/School/Other).</p>
-          </div>
-
-          <div className="info-card">
             <div className="info-icon orange">
               <Laptop size={26} />
             </div>
             <h4>Select Exam Mode</h4>
             <p>Choose the mode in which you appeared for the exam.</p>
+          </div>
+
+          <div className="info-card">
+            <div className="info-icon teal">
+              <School size={26} />
+            </div>
+            <h4>Select Center Code</h4>
+            <p>Enter the correct 3-digit center code from your admit card.</p>
           </div>
         </div>
       </div>

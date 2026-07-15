@@ -20,7 +20,7 @@ import SchoolProfile from "../Website/Pages/SchoolProfile/SchoolProfile";
 import Results from "../Website/Pages/results/results";
 import ExamSchedule from "../Website/Pages/ExamSchedule/ExamSchedule";
 import MyOlympiads from "../Website/Pages/MyOlympiads/MyOlympiads";
-
+import Gallery from "../Website/Pages/Gallery/Gallery";
 import SyllabusList from "../Website/Pages/SyllabusList/SyllabusList";
 import SyllabusDetails from "../Website/Pages/SyllabusDetails/SyllabusDetails";
 import PracticePaper from "../Website/Pages/PracticePaperDetails/PracticePaperDetails";
@@ -52,7 +52,7 @@ import PracticePaperClass9Science from "../Website/Pages/PracticePaperDetails/Pr
 import PracticePaperClass10English from "../Website/Pages/PracticePaperDetails/Practicepaperclass10english";
 import PracticePaperClass10Maths from "../Website/Pages/PracticePaperDetails/Practicepaperclass10maths";
 import PracticePaperClass10Science from "../Website/Pages/PracticePaperDetails/Practicepaperclass10science";
-
+import SchoolOlympiads from "../Website/Pages/SchoolOlympiads/SchoolOlympiads";
 import Syllabus3English from "../Website/Pages/SyllabusDetails/syllabus-3-english";
 import Syllabus4English from "../Website/Pages/SyllabusDetails/syllabus-4-english";
 import Syllabus5English from "../Website/Pages/SyllabusDetails/syllabus-5-english";
@@ -104,6 +104,7 @@ function AppRoutes() {
       <Route path="/results" element={<Results />} />
       <Route path="/exam-schedule" element={<ExamSchedule />} />
       <Route path="/student/my-olympiads" element={<MyOlympiads />} />
+      <Route path="/school/my-olympiads" element={<SchoolOlympiads />} />
       <Route path="/syllabus-list" element={<SyllabusList />} />
       <Route path="/syllabus-details" element={<SyllabusDetails />} />
       <Route path="/practice-paper-list" element={<PracticePaperList />} />
@@ -111,6 +112,7 @@ function AppRoutes() {
         path="/practice-paper-details"
         element={<PracticePaperDetails />}
       />
+      <Route path="/gallery" element={<Gallery />} />
       {/* <Route
         path="/syllabus/:classSegment/:subject"
         element={<SyllabusDetails />}

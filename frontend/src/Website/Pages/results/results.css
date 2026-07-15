@@ -90,18 +90,24 @@
 /* Form grid */
 .results-form-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-bottom: 32px;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
+  .results-form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
   .results-form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 480px) {
   .results-form-grid {
     grid-template-columns: 1fr;
   }
@@ -112,6 +118,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  min-width: 0;
 }
 
 .field-icon {
@@ -136,6 +143,7 @@
 .form-field input,
 .form-field select {
   width: 100%;
+  box-sizing: border-box;
   padding: 10px 14px;
   border: 1px solid #d8dde6;
   border-radius: 8px;
