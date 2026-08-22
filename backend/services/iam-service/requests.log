@@ -1,0 +1,6 @@
+[2026-06-26T05:17:02.918Z] POST /api/iam/register-user - 500 - 126ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36
+[2026-06-26T05:19:43.957Z] POST /api/iam/register-user - 500 - 95ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36
+[2026-06-26T05:33:18.703Z] POST /api/iam/register-user - 400 - 11ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36
+[2026-06-26T05:33:46.894Z] POST /api/iam/register-user - 400 - 118ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36
+[2026-06-26T05:33:59.657Z] POST /api/iam/register-user - 400 - 2ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36
+[2026-06-26T05:34:22.199Z] POST /api/iam/register-user - 400 - 95ms - IP: ::ffff:127.0.0.1 - UA: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36

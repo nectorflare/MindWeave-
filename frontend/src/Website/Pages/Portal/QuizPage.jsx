@@ -1,0 +1,17 @@
+import { useEffect, useState } from "react";
+import { api } from "../../../services/api";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
+import "./QuizPage.css";
+
+const options = (value) => { if (value && typeof value === "object") return value; try { return JSON.parse(value); } catch { return {}; } };
+export default function QuizPage() {
+  const [tests,setTests]=useState([]),[test,setTest]=useState(null),[answers,setAnswers]=useState({}),[result,setResult]=useState(null),[status,setStatus]=useState("Loading online tests…"),[remaining,setRemaining]=useState(null);
+  useEffect(()=>{api("/api/v1/online-tests").then(r=>{setTests(r.data||[]);setStatus("")}).catch(e=>setStatus(e.message))},[]);
+  useEffect(()=>{if(remaining===null||result)return;if(remaining<=0){submit();return}const timer=setTimeout(()=>setRemaining(v=>v-1),1000);return()=>clearTimeout(timer)});
+  const classLabel=item=>item?.eligibilityCriteria?.classGrades?.join(", ")||"All classes";
+  const openTest=async id=>{setStatus("Loading question paper…");setResult(null);setAnswers({});try{const r=await api(`/api/v1/online-tests/${id}`);setTest(r.data);setRemaining(r.data.durationMins*60);setStatus("")}catch(e){setStatus(e.message)}};
+  const submit=async event=>{event?.preventDefault();if(!test||result)return;setStatus("Submitting answers…");try{const r=await api(`/api/v1/online-tests/${test.id}/submit`,{method:"POST",body:JSON.stringify({answers:Object.entries(answers).map(([questionId,selectedOption])=>({questionId,selectedOption}))})});setResult(r.data);setRemaining(null);setStatus("")}catch(e){setStatus(e.message)}};
+  const clock=remaining===null?"":`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,"0")}`;
+  return <><Navbar/><main className="quiz-page"><header><span>ONLINE TEST CENTRE</span><h1>{test?.title||"Online Tests"}</h1><p>{test?`${classLabel(test)} · ${test.subject}`:"Choose a published question paper and test your knowledge."}</p>{test&&<strong className="quiz-clock">Time remaining: {clock}</strong>}</header>{status&&<p className="quiz-status" role="status">{status}</p>}{!test&&<section className="online-test-grid">{tests.map(item=><article key={item.id}><h2>{item.title}</h2><p>{item.description}</p><span>{classLabel(item)} · {item.durationMins} minutes · {item.totalMarks} marks</span><button onClick={()=>openTest(item.id)}>Start Test</button></article>)}{!status&&!tests.length&&<p>No online tests are currently published.</p>}</section>}{test&&!result&&<form onSubmit={submit}>{test.questions.map((question,index)=><fieldset key={question.id}><legend>{index+1}. {question.questionText}</legend>{Object.entries(options(question.options)).map(([key,option])=><label key={key}><input type="radio" name={question.id} checked={answers[question.id]===key} onChange={()=>setAnswers(current=>({...current,[question.id]:key}))}/> <strong>{key}.</strong> {option}</label>)}</fieldset>)}<p>{Object.keys(answers).length} of {test.questions.length} answered</p><button type="submit">Submit Test</button></form>}{result&&<section className="quiz-result" role="status"><h2>You scored {result.score} out of {result.maxMarks}</h2><p>You answered {result.answered} of {result.totalQuestions} questions.</p><button onClick={()=>{setResult(null);setAnswers({});setRemaining(test.durationMins*60)}}>Try Again</button><button onClick={()=>{setTest(null);setResult(null);setAnswers({});setRemaining(null)}}>All Tests</button></section>}</main><Footer/></>;
+}

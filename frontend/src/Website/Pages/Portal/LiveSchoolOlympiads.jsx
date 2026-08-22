@@ -1,0 +1,6 @@
+import { useEffect, useState } from "react";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
+import { api } from "../../../services/api";
+import "./Portal.css";
+export default function LiveSchoolOlympiads(){const[items,setItems]=useState([]),[error,setError]=useState("");useEffect(()=>{api("/api/v1/schools/me/registrations").then(async r=>{setItems(await Promise.all((r.data||[]).map(async registration=>{const examId=registration.examId||registration.exam_id;try{const exam=(await api(`/api/v1/exams/${examId}`)).data;return{...registration,examId,title:exam.title,startTime:exam.startTime,mode:exam.mode}}catch{return{...registration,examId,title:"Olympiad"}}})))}).catch(e=>setError(e.message))},[]);return <><Navbar/><main className="portal-page"><h1>School olympiads</h1>{error&&<p className="portal-error">{error}</p>}{!error&&!items.length&&<p>No school registrations found.</p>}<div className="portal-grid">{items.map((item,index)=><article className="portal-card" key={item.id||index}><h2>{item.title}</h2><p>{item.startTime?new Date(item.startTime).toLocaleString():"Schedule pending"}</p><p><strong>Mode:</strong> {item.mode||"Not specified"}</p><p><strong>Status:</strong> {item.status}</p></article>)}</div></main><Footer/></>}

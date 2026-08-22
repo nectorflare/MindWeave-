@@ -1,0 +1,72 @@
+[
+    {
+        "Name":  "iam-service",
+        "Id":  5072,
+        "Port":  3001
+    },
+    {
+        "Name":  "academic-service",
+        "Id":  2952,
+        "Port":  3002
+    },
+    {
+        "Name":  "commerce-service",
+        "Id":  2092,
+        "Port":  3003
+    },
+    {
+        "Name":  "live-exam-service",
+        "Id":  14288,
+        "Port":  3004
+    },
+    {
+        "Name":  "notification-service",
+        "Id":  11472,
+        "Port":  3005
+    },
+    {
+        "Name":  "admin-service",
+        "Id":  11176,
+        "Port":  3006
+    },
+    {
+        "Name":  "student-service",
+        "Id":  17292,
+        "Port":  3007
+    },
+    {
+        "Name":  "school-service",
+        "Id":  16032,
+        "Port":  3008
+    },
+    {
+        "Name":  "cms-service",
+        "Id":  10280,
+        "Port":  3009
+    },
+    {
+        "Name":  "file-service",
+        "Id":  6848,
+        "Port":  3010
+    },
+    {
+        "Name":  "analytics-service",
+        "Id":  4260,
+        "Port":  3011
+    },
+    {
+        "Name":  "worker-service",
+        "Id":  17624,
+        "Port":  0
+    },
+    {
+        "Name":  "api-gateway",
+        "Id":  17364,
+        "Port":  3000
+    },
+    {
+        "Name":  "frontend",
+        "Id":  17120,
+        "Port":  5173
+    }
+]

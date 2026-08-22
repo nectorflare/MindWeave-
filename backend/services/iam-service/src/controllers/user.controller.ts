@@ -8,8 +8,12 @@ import {
   getSchoolById,
   getStudentById,
   updateSchool as updateSchoolService,
-  updateStudent as updateStudentService
+  updateStudent as updateStudentService,
+  requestPasswordReset as requestPasswordResetService,
+  resetPassword as resetPasswordService,
+  changePassword as changePasswordService
 } from '../services/user.service';
+import fs from 'fs';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -33,8 +37,32 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Login error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
+};
+
+export const requestPasswordReset = async (req: Request, res: Response) => {
+  if (!req.body.email) return res.status(400).json({ message: 'Email is required' });
+  const token = await requestPasswordResetService(String(req.body.email));
+  return res.json({
+    success: true,
+    message: 'If that account exists, password reset instructions have been created.',
+    ...(process.env.NODE_ENV !== 'production' && token ? { resetToken: token } : {})
+  });
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  if (!req.body.token || !req.body.password || String(req.body.password).length < 8) return res.status(400).json({ message: 'A valid token and password of at least 8 characters are required' });
+  try { await resetPasswordService(String(req.body.token), String(req.body.password)); return res.json({ success: true }); }
+  catch (error) { return res.status(400).json({ message: (error as Error).message }); }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  const userId = req.header('x-user-id');
+  if (!userId || !req.body.currentPassword || !req.body.newPassword || String(req.body.newPassword).length < 8) return res.status(400).json({ message: 'Current password and a new password of at least 8 characters are required' });
+  try { await changePasswordService(userId, String(req.body.currentPassword), String(req.body.newPassword)); return res.json({ success: true }); }
+  catch (error) { return res.status(400).json({ message: (error as Error).message }); }
 };
 
 export const registerSchool = async (req: Request, res: Response) => {
@@ -45,7 +73,7 @@ export const registerSchool = async (req: Request, res: Response) => {
     const message = error instanceof Error ? error.message : 'Internal server error';
     console.error('Register school error:', error);
 
-    if (message === 'Email already in use' || message === 'Passwords do not match' || message === 'Email and password are required') {
+    if (message === 'Email already in use' || message === 'Passwords do not match' || message === 'Email and password are required' || message === 'Enter a valid email address') {
       return res.status(400).json({ message });
     }
 
@@ -53,6 +81,7 @@ export const registerSchool = async (req: Request, res: Response) => {
       return res.status(400).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Register school error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -65,7 +94,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const message = error instanceof Error ? error.message : 'Internal server error';
     console.error('Register user error:', error);
 
-    if (message === 'Email already in use' || message === 'Passwords do not match' || message === 'Email and password are required') {
+    if (message === 'Email already in use' || message === 'Passwords do not match' || message === 'Email and password are required' || message === 'Enter a valid email address') {
       return res.status(400).json({ message });
     }
 
@@ -73,6 +102,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Register user error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -83,6 +113,7 @@ export const getSchools = async (_req: Request, res: Response) => {
     return res.json({ schools });
   } catch (error) {
     console.error('Get schools error:', error);
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Get schools error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -93,6 +124,7 @@ export const getStudents = async (_req: Request, res: Response) => {
     return res.json({ students });
   } catch (error) {
     console.error('Get students error:', error);
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Get students error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -114,6 +146,7 @@ export const getSchool = async (req: Request, res: Response) => {
       return res.status(404).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Get school error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -135,6 +168,7 @@ export const getStudent = async (req: Request, res: Response) => {
       return res.status(404).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Get student error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -160,6 +194,7 @@ export const updateSchool = async (req: Request, res: Response) => {
       return res.status(400).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Update school error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -185,6 +220,7 @@ export const updateStudent = async (req: Request, res: Response) => {
       return res.status(400).json({ message });
     }
 
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] Update student error: ${(error as Error)?.stack || String(error)}\n`); } catch (e) { /* ignore */ }
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

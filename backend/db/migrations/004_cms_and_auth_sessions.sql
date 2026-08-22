@@ -1,0 +1,23 @@
+USE edtech_platform;
+
+CREATE TABLE IF NOT EXISTS gallery_items (
+  id CHAR(36) PRIMARY KEY,
+  image_url VARCHAR(1000) NOT NULL,
+  caption VARCHAR(500),
+  is_active TINYINT(1) DEFAULT 1,
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS contact_settings (
+  id VARCHAR(50) PRIMARY KEY DEFAULT 'default',
+  address TEXT,
+  phone VARCHAR(100),
+  email VARCHAR(255),
+  working_hours VARCHAR(255),
+  map_url VARCHAR(1000),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT IGNORE INTO contact_settings(id) VALUES('default');

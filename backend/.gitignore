@@ -10,3 +10,4 @@ logs/
 services/*/logs/
 services/*/dist/
 packages/*/dist/
+docs/*

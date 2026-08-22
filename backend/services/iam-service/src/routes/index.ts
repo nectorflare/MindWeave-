@@ -8,7 +8,10 @@ import {
   getSchool,
   getStudent,
   updateSchool,
-  updateStudent
+  updateStudent,
+  requestPasswordReset,
+  resetPassword,
+  changePassword
 } from '../controllers/user.controller';
 
 const router = Router();
@@ -16,6 +19,9 @@ const router = Router();
 router.post('/login', login);
 router.post('/register-school', registerSchool);
 router.post('/register-user', registerUser);
+router.post('/password/request-reset', requestPasswordReset);
+router.post('/password/reset', resetPassword);
+router.post('/password/change', changePassword);
 router.get('/schools', getSchools);
 router.get('/get-schools', getSchools);
 router.get('/schools/:id', getSchool);

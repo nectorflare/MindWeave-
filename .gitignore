@@ -1,3 +1,7 @@
 backend/node_modules
 backend/.claude
 backend/.env
+# Frontend source is part of the application. Ignore only generated/local files.
+frontend/node_modules/
+frontend/dist/
+frontend/.env

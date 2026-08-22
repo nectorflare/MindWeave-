@@ -9,3 +9,24 @@ export interface AuthenticatedUser {
   email: string;
   role: UserRole;
 }
+
+export interface ApiErrorBody {
+  code: string;
+  message: string;
+  requestId?: string;
+  details?: unknown;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  meta?: Record<string, unknown>;
+  error?: ApiErrorBody;
+}
+
+export interface PageMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}

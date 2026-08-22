@@ -13,6 +13,9 @@
     "build": "turbo run build --concurrency=1",
     "lint": "turbo run lint",
     "test": "turbo run test --concurrency=1"
+    ,"db:migrate": "node scripts/apply-migrations.js"
+    ,"db:seed": "node db/seeds/test-system-data.js"
+    ,"test:e2e": "node scripts/test-all-apis.js"
   },
   "keywords": [],
   "author": "",

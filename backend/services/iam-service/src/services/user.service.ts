@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 import User from '../models/User';
 import SchoolProfile from '../models/SchoolProfile';
 import StudentProfile from '../models/StudentProfile';
+import { Op } from 'sequelize';
+import { createHash, randomBytes } from 'node:crypto';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-in-env';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '1d') as jwt.SignOptions['expiresIn'];
@@ -104,23 +107,60 @@ const userRequiredFields = [
 ];
 
 export const loginUser = async (email: string, password: string) => {
-  const user = await User.findOne({ where: { email } });
+  try {
+    const user = await User.findOne({ where: { email } });
 
-  if (!user) {
-    throw new Error('User not found');
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.validatePassword(password)) {
+      throw new Error('Incorrect password');
+    }
+
+    await user.update({ last_login_at: new Date() });
+
+    const profile = user.role === 'STUDENT'
+      ? await StudentProfile.findOne({ where: { user_id: user.id } })
+      : user.role === 'SCHOOL_ADMIN'
+        ? await SchoolProfile.findOne({ where: { user_id: user.id } })
+        : null;
+
+    return jwt.sign(
+      { userId: user.id, profileId: profile?.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+  } catch (err) {
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] loginUser error: ${(err as Error)?.stack || String(err)}\n`); } catch (e) {}
+    throw err;
   }
+};
 
-  if (!user.validatePassword(password)) {
-    throw new Error('Incorrect password');
-  }
+export const requestPasswordReset = async (email: string) => {
+  const user = await User.findOne({ where: { email: email.trim().toLowerCase() } });
+  if (!user) return null;
+  const token = randomBytes(32).toString('hex');
+  await user.update({
+    password_reset_token: createHash('sha256').update(token).digest('hex'),
+    reset_token_expires_at: new Date(Date.now() + 30 * 60 * 1000)
+  });
+  return token;
+};
 
-  await user.update({ last_login_at: new Date() });
+export const resetPassword = async (token: string, password: string) => {
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  const user = await User.findOne({
+    where: { password_reset_token: tokenHash, reset_token_expires_at: { [Op.gt]: new Date() } }
+  });
+  if (!user) throw new Error('Reset token is invalid or expired');
+  await user.update({ password_hash: password, password_reset_token: null, reset_token_expires_at: null });
+};
 
-  return jwt.sign(
-    { userId: user.id, email: user.email, role: user.role },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
+export const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
+  const user = await User.findByPk(userId);
+  if (!user || !user.validatePassword(currentPassword)) throw new Error('Current password is incorrect');
+  await user.update({ password_hash: newPassword });
 };
 
 export const registerSchool = async (payload: RegisterSchoolPayload) => {
@@ -135,45 +175,50 @@ export const registerSchool = async (payload: RegisterSchoolPayload) => {
     throw new Error('Passwords do not match');
   }
 
-  const existingUser = await User.findOne({ where: { email: payload.emailId } });
-  if (existingUser) {
-    throw new Error('Email already in use');
+  try {
+    const existingUser = await User.findOne({ where: { email: payload.emailId } });
+    if (existingUser) {
+      throw new Error('Email already in use');
+    }
+
+    const user = await User.create({
+      email: payload.emailId.trim(),
+      password_hash: payload.password,
+      role: 'SCHOOL_ADMIN',
+      status: 'ACTIVE'
+    });
+
+    const schoolProfile = await SchoolProfile.create({
+      user_id: user.id,
+      school_name: payload.schoolName.trim(),
+      school_code: payload.schoolCode?.trim() || null,
+      school_type: payload.schoolType.trim(),
+      board_name: payload.boardName.trim(),
+      affiliation_number: payload.affiliationNumber.trim(),
+      udise_code: payload.udiseCode.trim(),
+      established_year: payload.establishedYear.trim(),
+      address_line1: payload.addressLine1.trim(),
+      address_line2: payload.addressLine2?.trim() || null,
+      city: payload.city.trim(),
+      district: payload.district.trim(),
+      state: payload.state.trim(),
+      pincode: payload.pincode.trim(),
+      country: payload.country.trim(),
+      principal_name: payload.principalName.trim(),
+      principal_mobile_number: payload.principalMobileNumber.trim(),
+      principal_email_id: payload.principalEmailId.trim(),
+      olympiad_coordinator_name: payload.olympiadCoordinatorName.trim(),
+      designation: payload.designation.trim(),
+      mobile_number: payload.mobileNumber.trim(),
+      whatsapp_number: payload.whatsappNumber.trim(),
+      coordinator_email_id: payload.coordinatorEmailId.trim()
+    });
+
+    return schoolProfile.toJSON();
+  } catch (err) {
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] registerSchool error: ${(err as Error)?.stack || String(err)}\n`); } catch (e) {}
+    throw err;
   }
-
-  const user = await User.create({
-    email: payload.emailId.trim(),
-    password_hash: payload.password,
-    role: 'SCHOOL_ADMIN',
-    status: 'ACTIVE'
-  });
-
-  const schoolProfile = await SchoolProfile.create({
-    user_id: user.id,
-    school_name: payload.schoolName.trim(),
-    school_code: payload.schoolCode?.trim() || null,
-    school_type: payload.schoolType.trim(),
-    board_name: payload.boardName.trim(),
-    affiliation_number: payload.affiliationNumber.trim(),
-    udise_code: payload.udiseCode.trim(),
-    established_year: payload.establishedYear.trim(),
-    address_line1: payload.addressLine1.trim(),
-    address_line2: payload.addressLine2?.trim() || null,
-    city: payload.city.trim(),
-    district: payload.district.trim(),
-    state: payload.state.trim(),
-    pincode: payload.pincode.trim(),
-    country: payload.country.trim(),
-    principal_name: payload.principalName.trim(),
-    principal_mobile_number: payload.principalMobileNumber.trim(),
-    principal_email_id: payload.principalEmailId.trim(),
-    olympiad_coordinator_name: payload.olympiadCoordinatorName.trim(),
-    designation: payload.designation.trim(),
-    mobile_number: payload.mobileNumber.trim(),
-    whatsapp_number: payload.whatsappNumber.trim(),
-    coordinator_email_id: payload.coordinatorEmailId.trim()
-  });
-
-  return schoolProfile.toJSON();
 };
 
 export const registerUser = async (payload: RegisterUserPayload) => {
@@ -188,40 +233,48 @@ export const registerUser = async (payload: RegisterUserPayload) => {
     throw new Error('Passwords do not match');
   }
 
-  const existingUser = await User.findOne({ where: { email: payload.emailId } });
-  if (existingUser) {
-    throw new Error('Email already in use');
+  const email = payload.emailId.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error('Enter a valid email address');
   }
 
-  const user = await User.create({
-    email: payload.emailId.trim(),
-    password_hash: payload.password,
-    role: 'STUDENT',
-    status: 'ACTIVE'
-  });
+  try {
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      throw new Error('Email already in use');
+    }
 
-  const studentProfile = await StudentProfile.create({
-    user_id: user.id,
-    first_name: payload.firstName.trim(),
-    last_name: payload.lastName.trim(),
-    gender: payload.gender.trim(),
-    date_of_birth: payload.dateOfBirth,
-    class_grade: payload.classGrade.trim(),
-    school_name: payload.schoolName.trim(),
-    city: payload.city.trim(),
-    state: payload.state.trim(),
-    father_name: payload.fatherName.trim(),
-    mother_name: payload.motherName.trim(),
-    parent_mobile_number: payload.parentMobileNumber?.trim() || null,
-    email_id: payload.emailId.trim(),
-    mobile_number: payload.mobileNumber.trim(),
-    address: payload.address.trim(),
-    address_city: payload.addressCity.trim(),
-    address_state: payload.addressState.trim(),
-    pincode: payload.pincode.trim()
-  });
+    const user = await User.create({
+      email,
+      password_hash: payload.password,
+      role: 'STUDENT',
+      status: 'ACTIVE'
+    });
 
-  return studentProfile.toJSON();
+    const studentProfile = await StudentProfile.create({
+      user_id: user.id,
+      first_name: payload.firstName.trim(),
+      last_name: payload.lastName.trim(),
+      gender: payload.gender.trim(),
+      date_of_birth: payload.dateOfBirth,
+      class_grade: payload.classGrade.trim(),
+      father_name: payload.fatherName.trim(),
+      mother_name: payload.motherName.trim(),
+      parent_mobile_number: payload.parentMobileNumber?.trim() || null,
+      email_id: email,
+      mobile_number: payload.mobileNumber.trim(),
+      address: payload.address.trim(),
+      address_city: payload.addressCity.trim(),
+      address_state: payload.addressState.trim(),
+      pincode: payload.pincode.trim()
+    });
+
+    return studentProfile.toJSON();
+  } catch (err) {
+    const errorMsg = `registerUser error: ${(err as any)?.original?.message || (err as Error)?.message || String(err)}`;
+    try { fs.appendFileSync('./logs/server-errors.log', `[${new Date().toISOString()}] ${errorMsg}\n${(err as Error)?.stack || ''}\n`); } catch (e) {}
+    throw err;
+  }
 };
 
 type UpdateSchoolPayload = Partial<Omit<RegisterSchoolPayload, 'password' | 'confirmPassword'>>;
@@ -238,7 +291,7 @@ export const getAllStudents = async () => {
 };
 
 export const getSchoolById = async (schoolId: string) => {
-  const school = await SchoolProfile.findByPk(schoolId);
+  const school = await SchoolProfile.findOne({ where: { [Op.or]: [{ id: schoolId }, { user_id: schoolId }] } });
   if (!school) {
     throw new Error('School not found');
   }
@@ -246,7 +299,7 @@ export const getSchoolById = async (schoolId: string) => {
 };
 
 export const getStudentById = async (studentId: string) => {
-  const student = await StudentProfile.findByPk(studentId);
+  const student = await StudentProfile.findOne({ where: { [Op.or]: [{ id: studentId }, { user_id: studentId }] } });
   if (!student) {
     throw new Error('Student not found');
   }
@@ -254,7 +307,7 @@ export const getStudentById = async (studentId: string) => {
 };
 
 export const updateSchool = async (schoolId: string, payload: UpdateSchoolPayload) => {
-  const school = await SchoolProfile.findByPk(schoolId);
+  const school = await SchoolProfile.findOne({ where: { [Op.or]: [{ id: schoolId }, { user_id: schoolId }] } });
   if (!school) {
     throw new Error('School not found');
   }
@@ -303,7 +356,7 @@ export const updateSchool = async (schoolId: string, payload: UpdateSchoolPayloa
 };
 
 export const updateStudent = async (studentId: string, payload: UpdateStudentPayload) => {
-  const student = await StudentProfile.findByPk(studentId);
+  const student = await StudentProfile.findOne({ where: { [Op.or]: [{ id: studentId }, { user_id: studentId }] } });
   if (!student) {
     throw new Error('Student not found');
   }

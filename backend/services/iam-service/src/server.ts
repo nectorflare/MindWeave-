@@ -13,9 +13,11 @@ import StudentProfile from './models/StudentProfile';
 const app = express();
 const port = process.env.PORT || 3001;
 
-const allowedOrigins = [
-  'http://localhost:3000'
-];
+const allowedOrigins = (process.env.CORS_ORIGINS ||
+  'http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
 
 app.use(cors({
   origin(origin, callback) {
@@ -50,7 +52,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 authenticate()
   .then(() => {
     console.log('IAM database connected successfully');
-    return sequelize.sync().then(() => {
+    return sequelize.sync({ force: false }).then(() => {
       console.log('IAM database synced successfully');
       app.listen(port, () => console.log(`IAM service running on port ${port}`));
     });

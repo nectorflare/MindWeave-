@@ -26,6 +26,7 @@ edtech_platform,exam_registrations,exam_id,char,char(36),NO,MUL,NULL,
 edtech_platform,exam_registrations,payment_order_id,char,char(36),NO,MUL,NULL,
 edtech_platform,exam_registrations,admit_card_url,varchar,varchar(500),YES,,NULL,
 edtech_platform,exam_registrations,result_score,decimal,"decimal(5,2)",YES,,NULL,
+edtech_platform,exam_registrations,certificate_url,varchar,varchar(500),YES,,NULL,
 edtech_platform,exam_registrations,created_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,DEFAULT_GENERATED
 edtech_platform,exam_registrations,updated_at,timestamp,timestamp,YES,,CURRENT_TIMESTAMP,"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
 edtech_platform,exam_sessions,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
@@ -44,6 +45,7 @@ edtech_platform,exams,id,char,char(36),NO,PRI,uuid(),DEFAULT_GENERATED
 edtech_platform,exams,subject_id,char,char(36),NO,MUL,NULL,
 edtech_platform,exams,created_by,char,char(36),YES,MUL,NULL,
 edtech_platform,exams,title,varchar,varchar(255),NO,,NULL,
+edtech_platform,exams,mode,enum,"enum('ONLINE','OFFLINE')",YES,,NULL,
 edtech_platform,exams,start_time,timestamp,timestamp,NO,MUL,NULL,
 edtech_platform,exams,duration_mins,int,int,NO,,NULL,
 edtech_platform,exams,total_marks,int,int,NO,,NULL,

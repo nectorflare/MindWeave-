@@ -54,9 +54,13 @@ CREATE TABLE student_profiles (
 CREATE TABLE subjects (
   id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   name VARCHAR(255) NOT NULL,
+  code VARCHAR(50) UNIQUE,
+  description TEXT,
   syllabus_url VARCHAR(500),
+  status ENUM('DRAFT','PUBLISHED','ARCHIVED') NOT NULL DEFAULT 'DRAFT',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_subjects_status (status)
 );
 
 CREATE TABLE exams (
@@ -64,14 +68,24 @@ CREATE TABLE exams (
   subject_id CHAR(36) NOT NULL,
   created_by CHAR(36),
   title VARCHAR(255) NOT NULL,
+  description TEXT,
+  mode ENUM('ONLINE','OFFLINE') NOT NULL,
   start_time TIMESTAMP NOT NULL,
+  registration_start_at TIMESTAMP NULL,
+  registration_end_at TIMESTAMP NULL,
   duration_mins INT NOT NULL,
   total_marks INT NOT NULL,
+  fee DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+  capacity INT NULL,
+  eligibility_criteria JSON,
+  status ENUM('DRAFT','PUBLISHED','CLOSED','CANCELLED','COMPLETED') NOT NULL DEFAULT 'DRAFT',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_exams_subject_id (subject_id),
   INDEX idx_exams_created_by (created_by),
-  INDEX idx_exams_start_time (start_time)
+  INDEX idx_exams_start_time (start_time),
+  INDEX idx_exams_status (status)
 );
 
 CREATE TABLE questions (
@@ -81,10 +95,14 @@ CREATE TABLE questions (
   question_text TEXT NOT NULL,
   options JSON NOT NULL,
   correct_option VARCHAR(10) NOT NULL,
+  marks INT NOT NULL DEFAULT 1,
+  display_order INT NOT NULL DEFAULT 0,
+  status ENUM('DRAFT','PUBLISHED','ARCHIVED') NOT NULL DEFAULT 'DRAFT',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_questions_exam_id (exam_id),
-  INDEX idx_questions_created_by (created_by)
+  INDEX idx_questions_created_by (created_by),
+  INDEX idx_questions_status (status)
 );
 
 CREATE TABLE payment_orders (
@@ -141,14 +159,26 @@ CREATE TABLE exam_registrations (
   id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   student_id CHAR(36) NOT NULL,
   exam_id CHAR(36) NOT NULL,
-  payment_order_id CHAR(36) NOT NULL,
+  payment_order_id CHAR(36) NULL,
+  registered_by_type ENUM('STUDENT','SCHOOL','ADMIN') NOT NULL DEFAULT 'STUDENT',
+  registered_by_id CHAR(36) NOT NULL,
+  status ENUM('PENDING_PAYMENT','PENDING','APPROVED','REJECTED','CANCELLED')
+    NOT NULL DEFAULT 'PENDING_PAYMENT',
   admit_card_url VARCHAR(500),
-  result_score DECIMAL(5,2),
+  admit_card_status ENUM('NOT_GENERATED','GENERATED','PUBLISHED')
+    NOT NULL DEFAULT 'NOT_GENERATED',
+  result_score DECIMAL(7,2),
+  result_status ENUM('NOT_AVAILABLE','DRAFT','PUBLISHED')
+    NOT NULL DEFAULT 'NOT_AVAILABLE',
+  result_metadata JSON,
+  certificate_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_exam_registrations_student_id (student_id),
   INDEX idx_exam_registrations_exam_id (exam_id),
-  INDEX idx_exam_registrations_payment_order_id (payment_order_id)
+  INDEX idx_exam_registrations_payment_order_id (payment_order_id),
+  INDEX idx_exam_registrations_status (status),
+  UNIQUE KEY uq_exam_registration_student_exam (student_id, exam_id)
 );
 
 CREATE TABLE exam_sessions (

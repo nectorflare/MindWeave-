@@ -5,7 +5,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: edtech_platform
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
       interval: 10s
@@ -14,6 +14,13 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./db/schema/edtech_platform.sql:/docker-entrypoint-initdb.d/01-edtech-platform.sql:ro
+      - ./db/migrations/003_remaining_platform_services.sql:/docker-entrypoint-initdb.d/03-remaining-services.sql:ro
+      - ./db/migrations/004_cms_and_auth_sessions.sql:/docker-entrypoint-initdb.d/04-cms-auth.sql:ro
+      - ./db/migrations/005_commerce_production.sql:/docker-entrypoint-initdb.d/05-commerce-production.sql:ro
+      - ./db/migrations/006_study_resources.sql:/docker-entrypoint-initdb.d/06-study-resources.sql:ro
+      - ./db/migrations/007_about_journey.sql:/docker-entrypoint-initdb.d/07-about-journey.sql:ro
+      - ./db/migrations/008_practice_papers.sql:/docker-entrypoint-initdb.d/08-practice-papers.sql:ro
+      - ./db/migrations/009_team_members.sql:/docker-entrypoint-initdb.d/09-team-members.sql:ro
 
   api-gateway:
     build: ./services/api-gateway
@@ -24,6 +31,12 @@ services:
       COMMERCE_SERVICE_URL: http://commerce-service:3003
       LIVE_EXAM_SERVICE_URL: http://live-exam-service:3004
       NOTIFICATION_SERVICE_URL: http://notification-service:3005
+      ADMIN_SERVICE_URL: http://admin-service:3006
+      STUDENT_SERVICE_URL: http://student-service:3007
+      SCHOOL_SERVICE_URL: http://school-service:3008
+      CMS_SERVICE_URL: http://cms-service:3009
+      FILE_SERVICE_URL: http://file-service:3010
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "3000:3000"
     depends_on:
@@ -33,13 +46,14 @@ services:
     build: ./services/iam-service
     environment:
       PORT: 3001
-      JWT_SECRET: change-this-secret-in-env
+      JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: 1d
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_DATABASE: edtech_platform
       MYSQL_USER: root
       MYSQL_PASSWORD: root
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
     ports:
       - "3001:3001"
     depends_on:
@@ -70,6 +84,10 @@ services:
       MYSQL_DATABASE: edtech_platform
       MYSQL_USER: root
       MYSQL_PASSWORD: root
+      RAZORPAY_KEY_ID: rzp_test_TRDOcLu083nG6R
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET}
+      BOOK_TAX_RATE: "0.18"
     ports:
       - "3003:3003"
     depends_on:
@@ -95,8 +113,76 @@ services:
     build: ./services/notification-service
     environment:
       PORT: 3005
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: edtech_platform
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
     ports:
       - "3005:3005"
+
+  admin-service:
+    build: ./services/admin-service
+    environment: &db-env
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: edtech_platform
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      IAM_SERVICE_URL: http://iam-service:3001
+      ACADEMIC_SERVICE_URL: http://academic-service:3002
+      COMMERCE_SERVICE_URL: http://commerce-service:3003
+      CMS_SERVICE_URL: http://cms-service:3009
+      NOTIFICATION_SERVICE_URL: http://notification-service:3005
+      ANALYTICS_SERVICE_URL: http://analytics-service:3011
+    ports: ["3006:3006"]
+    depends_on: [mysql]
+
+  student-service:
+    build: ./services/student-service
+    environment:
+      PORT: 3007
+      IAM_SERVICE_URL: http://iam-service:3001
+      ACADEMIC_SERVICE_URL: http://academic-service:3002
+      COMMERCE_SERVICE_URL: http://commerce-service:3003
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      FILE_SIGNING_SECRET: ${FILE_SIGNING_SECRET}
+    ports: ["3007:3007"]
+
+  school-service:
+    build: ./services/school-service
+    environment:
+      PORT: 3008
+      IAM_SERVICE_URL: http://iam-service:3001
+      ACADEMIC_SERVICE_URL: http://academic-service:3002
+      COMMERCE_SERVICE_URL: http://commerce-service:3003
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+    ports: ["3008:3008"]
+
+  cms-service:
+    build: ./services/cms-service
+    environment: { <<: *db-env, PORT: 3009 }
+    ports: ["3009:3009"]
+    depends_on: [mysql]
+
+  file-service:
+    build: ./services/file-service
+    environment: { <<: *db-env, PORT: 3010 }
+    ports: ["3010:3010"]
+    depends_on: [mysql]
+
+  analytics-service:
+    build: ./services/analytics-service
+    environment: { <<: *db-env, PORT: 3011 }
+    ports: ["3011:3011"]
+    depends_on: [mysql]
+
+  worker-service:
+    build: ./services/worker-service
+    environment: *db-env
+    depends_on: [mysql]
 
 volumes:
   mysql-data:

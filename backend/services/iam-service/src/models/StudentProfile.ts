@@ -4,23 +4,23 @@ import { sequelize } from '../config/database';
 class StudentProfile extends Model<InferAttributes<StudentProfile>, InferCreationAttributes<StudentProfile>> {
   declare id: CreationOptional<string>;
   declare user_id: string;
+  declare school_id: CreationOptional<string | null>;
   declare first_name: string;
   declare last_name: string;
   declare gender: string;
   declare date_of_birth: string;
-  declare class_grade: string;
-  declare school_name: string;
-  declare city: string;
-  declare state: string;
+  declare class_grade: CreationOptional<string | null>;
   declare father_name: string;
   declare mother_name: string;
   declare parent_mobile_number: CreationOptional<string | null>;
-  declare email_id: string;
-  declare mobile_number: string;
-  declare address: string;
-  declare address_city: string;
-  declare address_state: string;
-  declare pincode: string;
+  declare email_id: CreationOptional<string | null>;
+  declare mobile_number: CreationOptional<string | null>;
+  declare address: CreationOptional<string | null>;
+  declare address_city: CreationOptional<string | null>;
+  declare address_state: CreationOptional<string | null>;
+  declare pincode: CreationOptional<string | null>;
+  declare parent_data: CreationOptional<Record<string, any> | null>;
+  declare address_data: CreationOptional<Record<string, any> | null>;
 }
 
 StudentProfile.init({
@@ -32,6 +32,10 @@ StudentProfile.init({
   user_id: {
     type: DataTypes.UUID,
     allowNull: false
+  },
+  school_id: {
+    type: DataTypes.UUID,
+    allowNull: true
   },
   first_name: {
     type: DataTypes.STRING,
@@ -47,23 +51,11 @@ StudentProfile.init({
   },
   date_of_birth: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: true
   },
   class_grade: {
     type: DataTypes.STRING,
-    allowNull: false
-  },
-  school_name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  state: {
-    type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   father_name: {
     type: DataTypes.STRING,
@@ -79,30 +71,38 @@ StudentProfile.init({
   },
   email_id: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     validate: {
       isEmail: true
     }
   },
   mobile_number: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   address: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   address_city: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   address_state: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   pincode: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
+  },
+  parent_data: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  address_data: {
+    type: DataTypes.JSON,
+    allowNull: true
   }
 }, {
   sequelize,
