@@ -8,6 +8,9 @@ import { QueryTypes, Sequelize } from 'sequelize';
 import multer from 'multer';
 import * as XLSX from 'xlsx';
 import { httpErrorResponse } from './httpError';
+const { bootstrapProductionAdmin } = require('../../../scripts/bootstrap-production-admin') as {
+  bootstrapProductionAdmin: (options: { requireCredentials: boolean }) => Promise<{ skipped?: boolean; adminId?: string; email?: string }>;
+};
 
 const db = new Sequelize(process.env.MYSQL_DATABASE || 'edtech_platform', process.env.MYSQL_USER || 'root', process.env.MYSQL_PASSWORD, { host: process.env.MYSQL_HOST || 'localhost', port: Number(process.env.MYSQL_PORT || 3306), dialect: 'mysql', logging: false });
 const app = express(); app.use(cors(), helmet(), express.json({ limit: '10mb' }));
@@ -69,4 +72,10 @@ app.use('/api/v1/admin',wrap(async(req,res)=>{
   await audit(req,upstream.status);res.status(upstream.status).send(Buffer.from(await upstream.arrayBuffer()));
 }));
 app.get('/health',(_q,res)=>res.json({service:'admin-service',status:'ok'}));
-db.authenticate().then(()=>app.listen(Number(process.env.PORT||3006),()=>console.log('admin-service listening'))).catch(e=>{console.error(e);process.exit(1)});
+db.authenticate()
+  .then(async () => {
+    const result = await bootstrapProductionAdmin({ requireCredentials: process.env.NODE_ENV === 'production' });
+    if (!result.skipped) console.log(`Production admin ready: ${result.email} (${result.adminId})`);
+    app.listen(Number(process.env.PORT || 3006), () => console.log('admin-service listening'));
+  })
+  .catch(e => { console.error(e); process.exit(1); });

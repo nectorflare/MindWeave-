@@ -29,6 +29,23 @@ CREATE TABLE school_profiles (
   address_data JSON,
   principal_data JSON,
   coordinator_data JSON,
+  school_type VARCHAR(255),
+  established_year VARCHAR(10),
+  address_line1 VARCHAR(255),
+  address_line2 VARCHAR(255),
+  city VARCHAR(255),
+  district VARCHAR(255),
+  state VARCHAR(255),
+  pincode VARCHAR(255),
+  country VARCHAR(255),
+  principal_name VARCHAR(255),
+  principal_mobile_number VARCHAR(50),
+  principal_email_id VARCHAR(255),
+  olympiad_coordinator_name VARCHAR(255),
+  designation VARCHAR(255),
+  mobile_number VARCHAR(50),
+  whatsapp_number VARCHAR(50),
+  coordinator_email_id VARCHAR(255),
   is_verified TINYINT(1) DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -45,6 +62,16 @@ CREATE TABLE student_profiles (
   class_grade VARCHAR(20),
   parent_data JSON,
   address_data JSON,
+  gender VARCHAR(50),
+  father_name VARCHAR(255),
+  mother_name VARCHAR(255),
+  parent_mobile_number VARCHAR(50),
+  email_id VARCHAR(255),
+  mobile_number VARCHAR(50),
+  address VARCHAR(255),
+  address_city VARCHAR(255),
+  address_state VARCHAR(255),
+  pincode VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_student_profiles_user_id (user_id),
@@ -117,6 +144,9 @@ CREATE TABLE payment_orders (
   payment_method VARCHAR(50),
   invoice_url VARCHAR(500),
   version_id INT DEFAULT 1,
+  gateway_payment_id VARCHAR(255),
+  purpose VARCHAR(50),
+  reference_id CHAR(36),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_payment_orders_user_id (user_id)
@@ -129,6 +159,11 @@ CREATE TABLE books (
   stock_quantity INT DEFAULT 0,
   is_digital TINYINT(1) DEFAULT 0,
   pdf_url VARCHAR(500),
+  author VARCHAR(255),
+  subject_id CHAR(36),
+  description TEXT,
+  cover_url VARCHAR(500),
+  status ENUM('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -139,6 +174,14 @@ CREATE TABLE book_orders (
   payment_order_id CHAR(36) NOT NULL,
   tracking_id VARCHAR(255),
   shipping_status ENUM('PENDING','SHIPPED','DELIVERED','CANCELLED') DEFAULT 'PENDING',
+  buyer_type ENUM('STUDENT','SCHOOL') NOT NULL DEFAULT 'STUDENT',
+  shipping_address JSON,
+  subtotal DECIMAL(10,2) NOT NULL DEFAULT 0,
+  shipping_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+  tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+  total_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+  cancellation_reason TEXT,
+  return_status ENUM('NONE','REQUESTED','APPROVED','REJECTED','COMPLETED') NOT NULL DEFAULT 'NONE',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_book_orders_student_id (student_id),
@@ -192,6 +235,7 @@ CREATE TABLE exam_sessions (
   is_flagged TINYINT(1) DEFAULT 0,
   started_at TIMESTAMP NULL,
   completed_at TIMESTAMP NULL,
+  last_heartbeat_at TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -203,7 +247,8 @@ CREATE TABLE session_answers (
   selected_option VARCHAR(10),
   saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_session_answers_session_id (session_id),
-  INDEX idx_session_answers_question_id (question_id)
+  INDEX idx_session_answers_question_id (question_id),
+  UNIQUE KEY uq_session_question (session_id, question_id)
 );
 
 CREATE TABLE banners (
@@ -223,4 +268,249 @@ CREATE TABLE inquiries (
   status ENUM('NEW','RESOLVED') DEFAULT 'NEW',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_roles (
+  id CHAR(36) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE role_permissions (
+  role_id CHAR(36) NOT NULL,
+  permission_key VARCHAR(150) NOT NULL,
+  PRIMARY KEY (role_id, permission_key)
+);
+
+CREATE TABLE admin_staff (
+  id CHAR(36) PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  status ENUM('ACTIVE','INACTIVE','SUSPENDED') DEFAULT 'ACTIVE',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_staff_roles (
+  staff_id CHAR(36) NOT NULL,
+  role_id CHAR(36) NOT NULL,
+  PRIMARY KEY (staff_id, role_id)
+);
+
+CREATE TABLE audit_logs (
+  id CHAR(36) PRIMARY KEY,
+  actor_id CHAR(36),
+  action VARCHAR(255) NOT NULL,
+  entity_type VARCHAR(100),
+  entity_id CHAR(36),
+  ip_address VARCHAR(45),
+  metadata JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_audit_actor (actor_id),
+  INDEX idx_audit_created (created_at)
+);
+
+CREATE TABLE system_settings (
+  setting_key VARCHAR(150) PRIMARY KEY,
+  setting_value JSON NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE offers (
+  id CHAR(36) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  code VARCHAR(100),
+  starts_at TIMESTAMP NULL,
+  ends_at TIMESTAMP NULL,
+  is_active TINYINT(1) DEFAULT 1,
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE faqs (
+  id CHAR(36) PRIMARY KEY,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  is_active TINYINT(1) DEFAULT 1,
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cart_items (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  book_id CHAR(36) NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_cart_user_book (user_id, book_id)
+);
+
+CREATE TABLE book_reviews (
+  id CHAR(36) PRIMARY KEY,
+  book_id CHAR(36) NOT NULL,
+  user_id CHAR(36) NOT NULL,
+  rating TINYINT NOT NULL,
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_review_user_book (user_id, book_id)
+);
+
+CREATE TABLE refunds (
+  id CHAR(36) PRIMARY KEY,
+  payment_order_id CHAR(36) NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  reason TEXT,
+  status ENUM('PENDING','SUCCESS','FAILED') DEFAULT 'PENDING',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE exam_integrity_events (
+  id CHAR(36) PRIMARY KEY,
+  session_id CHAR(36) NOT NULL,
+  event_type VARCHAR(100) NOT NULL,
+  metadata JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_integrity_session (session_id)
+);
+
+CREATE TABLE notifications (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  subject VARCHAR(255),
+  body TEXT NOT NULL,
+  status VARCHAR(50) DEFAULT 'DELIVERED',
+  read_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_notifications_user (user_id)
+);
+
+CREATE TABLE notification_jobs (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36),
+  channel VARCHAR(30) NOT NULL,
+  template_key VARCHAR(100) NOT NULL,
+  payload JSON,
+  status ENUM('QUEUED','PROCESSING','SENT','FAILED') DEFAULT 'QUEUED',
+  attempts INT DEFAULT 0,
+  processed_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_notification_jobs_status (status, created_at)
+);
+
+CREATE TABLE files (
+  id CHAR(36) PRIMARY KEY,
+  owner_id CHAR(36) NOT NULL,
+  storage_key VARCHAR(1000) NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  content_type VARCHAR(150),
+  size_bytes BIGINT DEFAULT 0,
+  status ENUM('PENDING','READY','DELETED') DEFAULT 'PENDING',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_files_owner (owner_id)
+);
+
+CREATE TABLE report_jobs (
+  id CHAR(36) PRIMARY KEY,
+  type VARCHAR(100) NOT NULL,
+  filters JSON,
+  status ENUM('QUEUED','PROCESSING','COMPLETED','FAILED') DEFAULT 'QUEUED',
+  output_url VARCHAR(1000),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE gallery_items (
+  id CHAR(36) PRIMARY KEY,
+  image_url VARCHAR(1000) NOT NULL,
+  caption VARCHAR(500),
+  is_active TINYINT(1) DEFAULT 1,
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE contact_settings (
+  id VARCHAR(50) PRIMARY KEY DEFAULT 'default',
+  address TEXT,
+  phone VARCHAR(100),
+  email VARCHAR(255),
+  working_hours VARCHAR(255),
+  map_url VARCHAR(1000),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE serviceable_pincodes (
+  pincode VARCHAR(12) PRIMARY KEY,
+  shipping_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+  estimated_days INT NOT NULL DEFAULT 7,
+  is_active TINYINT(1) NOT NULL DEFAULT 1
+);
+
+CREATE TABLE study_resources (
+  id CHAR(36) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  class_range VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL,
+  color VARCHAR(20) NOT NULL DEFAULT '#10275e',
+  preview_path VARCHAR(500) NOT NULL DEFAULT '/practice-papers',
+  book_id CHAR(36),
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_study_resources_active_order (is_active, display_order)
+);
+
+CREATE TABLE about_journey (
+  id VARCHAR(50) PRIMARY KEY DEFAULT 'default',
+  section_tag VARCHAR(100) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  image_url VARCHAR(1000) NOT NULL,
+  image_alt VARCHAR(255) NOT NULL,
+  paragraphs JSON NOT NULL,
+  stats JSON NOT NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE practice_papers (
+  id CHAR(36) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  subject VARCHAR(120) NOT NULL,
+  class_label VARCHAR(60) NOT NULL,
+  description TEXT,
+  duration_minutes INT NOT NULL DEFAULT 60,
+  max_marks INT NOT NULL DEFAULT 0,
+  instructions JSON NOT NULL,
+  sections JSON NOT NULL,
+  color VARCHAR(20) NOT NULL DEFAULT '#0d225a',
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_practice_papers_active_order (is_active, display_order)
+);
+
+CREATE TABLE team_members (
+  id CHAR(36) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  details TEXT NOT NULL,
+  image_url VARCHAR(1000) NOT NULL,
+  image_alt VARCHAR(255),
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_team_members_active_order (is_active, display_order)
 );
